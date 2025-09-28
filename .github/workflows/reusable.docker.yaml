@@ -94,7 +94,7 @@ on:
         required: true
         type: string
       docker_push_registry:
-        default: "ps-registry-docker-hosted.publicdns.zone"
+        default: "docker.io"
         required: false
         type: string
       setup_node:
