@@ -188,7 +188,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build and/or push Docker image
+      - name: Build Docker image
         id: build-docker-image
         uses: docker/build-push-action@v6
         with:

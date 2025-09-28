@@ -44,6 +44,6 @@ jobs:
     secrets: inherit
     with:
       application_path: docker/whoami
-      package_name: evercall-whoami
+      package_name: karstenjakobsen/evercall-whoami
       release: ${{ github.event_name != 'pull_request' }}
     if: ${{ needs.detect-changes.outputs.whoami == 'true' }}
