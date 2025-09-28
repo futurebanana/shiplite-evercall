@@ -1,0 +1,8 @@
+---
+# Ansible yaml invengtory file for development environment
+all:
+  children:
+    dev:
+      hosts:
+        dev-server-1:
+          ansible_host: 127.0.0.1

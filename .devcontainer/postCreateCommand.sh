@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-sudo apt-get update && sudo apt-get install -y shellcheck
+sudo apt-get update && sudo apt-get install -y shellcheck git-crypt wget curl
 
 pip3 install -r requirements.txt
 
@@ -46,5 +46,9 @@ curl -sS https://webi.sh/gh | sh
 
 echo "Installing pre-commit hooks..."
 pre-commit install
+
+echo "Run pre-commit autoupdate..."
+pre-commit autoupdate
+pre-commit run --all
 
 echo "Welcome to the jungle..."
