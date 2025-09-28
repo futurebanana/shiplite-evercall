@@ -61,7 +61,7 @@ on:
         type: string
       docker_push_registry:
         description: "Docker registry to push images to"
-        default: "docker.io"
+        default: "docker.io/karstenjakobsen"
         required: false
         type: string
       setup_node:
