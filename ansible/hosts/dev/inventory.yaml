@@ -4,5 +4,5 @@ all:
   children:
     dev:
       hosts:
-        dev-server-1:
+        ix1-dev-edge-01:
           ansible_host: 127.0.0.1
