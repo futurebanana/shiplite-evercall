@@ -193,12 +193,9 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ${{ inputs.application_path }}
-          push: true
-          tags: ${{ steps.docker-meta.outputs.tags }}
-          labels: ${{ steps.docker-meta.outputs.labels }}
-          build-args: |
-            docker_build_version="${{ fromJSON(steps.docker-meta.outputs.json).labels['org.opencontainers.image.version'] }}"
-        if: ${{ inputs.release == false || steps.release-please.outputs[ format('{0}--release_created', inputs.application_path) ] != '' }}
+          push: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       # Trivy scan: fail the job if HIGH/CRITICAL issues are found
       - name: Run Trivy vulnerability scanner
@@ -219,6 +216,8 @@ jobs:
           push: true
           tags: ${{ steps.docker-meta.outputs.tags }}
           labels: ${{ steps.docker-meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           build-args: |
             docker_build_version="${{ fromJSON(steps.docker-meta.outputs.json).labels['org.opencontainers.image.version'] }}"
         if: ${{ inputs.release == false || steps.release-please.outputs[ format('{0}--release_created', inputs.application_path) ] != '' }}
