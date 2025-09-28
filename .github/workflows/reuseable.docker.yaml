@@ -1,0 +1,224 @@
+# Outputs from release-please-action
+# No release:
+#  {
+#   "releases_created": "false",
+#   "paths_released": "[]",
+#   "prs_created": "true",
+#   "pr": "{\"headBranchName\":\"release-please--branches--main--components--docker-sipp\",\"baseBranchName\":\"main\",\"number\":53,\"title\":\"chore(main): release docker-sipp 0.0.1\",\"body\":\":robot: I have created a release *beep* *boop*\\n---\\n\\n\\n## 0.0.1 (2025-01-31)\\n\\n\\n### Bug Fixes\\n\\n* Dockerfile ([#52](https://github.com/EG-A-S/PS_VoIP/issues/52)) ([a51093a](https://github.com/EG-A-S/PS_VoIP/commit/a51093aaf8496131fd718fd87d9bac89df2fdcb4))\\n\\n---\\nThis PR was generated with [Release Please](https://github.com/googleapis/release-please). See [documentation](https://github.com/googleapis/release-please#release-please).\",\"files\":[],\"labels\":[\"autorelease: pending\"]}",
+#   "prs": "[{\"headBranchName\":\"release-please--branches--main--components--docker-sipp\",\"baseBranchName\":\"main\",\"number\":53,\"title\":\"chore(main): release docker-sipp 0.0.1\",\"body\":\":robot: I have created a release *beep* *boop*\\n---\\n\\n\\n## 0.0.1 (2025-01-31)\\n\\n\\n### Bug Fixes\\n\\n* Dockerfile ([#52](https://github.com/EG-A-S/PS_VoIP/issues/52)) ([a51093a](https://github.com/EG-A-S/PS_VoIP/commit/a51093aaf8496131fd718fd87d9bac89df2fdcb4))\\n\\n---\\nThis PR was generated with [Release Please](https://github.com/googleapis/release-please). See [documentation](https://github.com/googleapis/release-please#release-please).\",\"files\":[],\"labels\":[\"autorelease: pending\"]}]"
+# }"
+
+# Release exmple:
+# {
+#   "releases_created": "true",
+#   "docker/sipp--release_created": "true",
+#   "docker/sipp--id": "197725084",
+#   "docker/sipp--name": "docker-sipp: v0.0.1",
+#   "docker/sipp--tag_name": "docker-sipp-v0.0.1",
+#   "docker/sipp--sha": "451d09809ebe3464b239150821d06570767a7fdb",
+#   "docker/sipp--body": "## 0.0.1 (2025-01-31)\n\n\n### Bug Fixes\n\n* Dockerfile ([#52](https://github.com/EG-A-S/PS_VoIP/issues/52)) ([a51093a](https://github.com/EG-A-S/PS_VoIP/commit/a51093aaf8496131fd718fd87d9bac89df2fdcb4))",
+#   "docker/sipp--html_url": "https://github.com/EG-A-S/PS_VoIP/releases/tag/docker-sipp-v0.0.1",
+#   "docker/sipp--draft": "false",
+#   "docker/sipp--upload_url": "https://uploads.github.com/repos/EG-A-S/PS_VoIP/releases/197725084/assets{?name,label}",
+#   "docker/sipp--path": "docker/sipp",
+#   "docker/sipp--version": "0.0.1",
+#   "docker/sipp--major": "0",
+#   "docker/sipp--minor": "0",
+#   "docker/sipp--patch": "1",
+#   "paths_released": "[\"docker/sipp\"]",
+#   "prs_created": "false"
+# }
+
+name: Docker
+
+on:
+  workflow_dispatch:
+    inputs:
+      release:
+        description: "Whether to create a release"
+        required: false
+        type: boolean
+        default: false
+      tag:
+        description: "Tag to use for the Docker image"
+        required: true
+        type: string
+        default: "0.0.1"
+      tag_override:
+        description: "Whether to override the tag"
+        required: true
+        type: boolean
+        default: true
+      application_path:
+        description: "Path to the application to build"
+        default: "docker/*****"
+        required: true
+        type: string
+      package_name:
+        description: "Name of the package to build"
+        default: "karstenjakobsen/shiplite-****"
+        required: true
+        type: string
+      docker_push_registry:
+        description: "Docker registry to push images to"
+        default: "docker.io"
+        required: false
+        type: string
+      setup_node:
+        description: "Whether to setup Node.js"
+        required: false
+        type: boolean
+        default: true
+      setup_node_version:
+        description: "Version of Node.js to setup"
+        required: false
+        type: string
+        default: "22"
+  workflow_call:
+    inputs:
+      tag:
+        required: false
+        type: string
+      tag_override:
+        required: false
+        type: boolean
+        default: false
+      release:
+        required: false
+        type: boolean
+        default: false
+      application_path:
+        required: true
+        type: string
+      package_name:
+        required: true
+        type: string
+      docker_push_registry:
+        default: "ps-registry-docker-hosted.publicdns.zone"
+        required: false
+        type: string
+      setup_node:
+        required: false
+        type: boolean
+        default: false
+      setup_node_version:
+        required: false
+        type: string
+        default: "22"
+
+permissions: write-all
+
+jobs:
+  build-release:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: googleapis/release-please-action@v4
+        id: release-please
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          config-file: .github/release-please-config.json
+          manifest-file: .release-please-manifest.json
+        if: ${{ inputs.release == true }}
+
+      - uses: actions/checkout@v5
+
+      - name: Set Docker build tags for release
+        id: docker_build_tags_release
+        if: ${{ steps.release-please.outputs[format('{0}--release_created', inputs.application_path)] != '' }}
+        run: |
+          echo "${{ inputs.release == true }} && ${{ steps.release-please.outputs[format('{0}--release_created', inputs.application_path)] != '' }}"
+          echo "docker_build_tags=type=raw,value=${{ steps.release-please.outputs[format('{0}--version', inputs.application_path)] }}" >> $GITHUB_ENV
+
+      - name: Set Docker build tags
+        env:
+          PR_NUM: ${{ github.event.pull_request.number }} # will be empty on non-PR events
+        run: |
+          TAG="pr-${PR_NUM:-no-pr}-${{ github.head_ref }}-{{sha}}"
+          echo "docker_build_tags=type=raw,value=${TAG}" >> "$GITHUB_ENV"
+        if: ${{ inputs.release == false && inputs.tag_override == false }}
+
+      - name: Set Docker build tags for build
+        id: docker_build_tags_override
+        run: |
+          echo "docker_build_tags=type=raw,value=${{ inputs.tag }}" >> $GITHUB_ENV
+        if: ${{ inputs.tag_override == true }}
+
+      - name: Login to registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ inputs.docker_push_registry }}
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+        if: ${{ inputs.release == false || steps.release-please.outputs[format('{0}--release_created', inputs.application_path)] != '' }}
+
+      - name: Docker meta
+        id: docker-meta
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            ${{ inputs.docker_push_registry }}/${{ inputs.package_name }}
+          tags: ${{ env.docker_build_tags }}
+        if: ${{ inputs.release == false || steps.release-please.outputs[format('{0}--release_created', inputs.application_path)] != '' }}
+
+      - name: Setup node
+        uses: actions/setup-node@v5
+        with:
+          node-version: ${{ inputs.setup_node_version }}
+          always-auth: true
+          registry-url: "https://npm.pkg.github.com/"
+          scope: "@eg-a-s"
+        if: ${{ inputs.setup_node && ( inputs.release == false || steps.release-please.outputs[format('{0}--release_created', inputs.application_path)] != '' ) }}
+
+      - name: List config
+        run: npm config list
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        working-directory: ${{ inputs.application_path }}
+        if: ${{ inputs.setup_node == true && ( inputs.release == false || steps.release-please.outputs[format('{0}--release_created', inputs.application_path)] != '' ) }}
+
+      - name: Install dependencies
+        run: |
+          npm ci
+          npm run build --verbose
+        working-directory: ${{ inputs.application_path }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        if: ${{ inputs.setup_node == true && ( inputs.release == false || steps.release-please.outputs[ format('{0}--release_created', inputs.application_path) ] != '' ) }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and/or push Docker image
+        id: build-docker-image
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ inputs.application_path }}
+          push: true
+          tags: ${{ steps.docker-meta.outputs.tags }}
+          labels: ${{ steps.docker-meta.outputs.labels }}
+          build-args: |
+            docker_build_version="${{ fromJSON(steps.docker-meta.outputs.json).labels['org.opencontainers.image.version'] }}"
+        if: ${{ inputs.release == false || steps.release-please.outputs[ format('{0}--release_created', inputs.application_path) ] != '' }}
+
+      # Trivy scan: fail the job if HIGH/CRITICAL issues are found
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@0.33.1
+        with:
+          image-ref: karstenjakobsen/bitcoin-pipeline-example:latest
+          severity: "HIGH,CRITICAL"
+          ignore-unfixed: false
+          vuln-type: "os,library"
+          format: "table"
+          exit-code: "1"
+
+      - name: Build and push Docker image
+        id: build-push-docker-image
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ inputs.application_path }}
+          push: true
+          tags: ${{ steps.docker-meta.outputs.tags }}
+          labels: ${{ steps.docker-meta.outputs.labels }}
+          build-args: |
+            docker_build_version="${{ fromJSON(steps.docker-meta.outputs.json).labels['org.opencontainers.image.version'] }}"
+        if: ${{ inputs.release == false || steps.release-please.outputs[ format('{0}--release_created', inputs.application_path) ] != '' }}

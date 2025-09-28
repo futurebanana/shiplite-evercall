@@ -1,0 +1,49 @@
+---
+name: Docker Images
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "docker/**"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "docker/**"
+
+permissions: write-all
+
+jobs:
+  # Job to run change detection
+  detect-changes:
+    runs-on: ubuntu-24.04
+
+    # Set job outputs to values from filter step
+    outputs:
+      whoami: ${{ steps.filter.outputs.whoami }}
+
+    steps:
+      - uses: actions/checkout@v5
+        if: ${{ github.event_name != 'pull_request' }}
+
+      # For pull requests it's not necessary to checkout the code
+      # Looks for changes in these paths
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            whoami:
+              - 'docker/whoami/**'
+
+  whoami:
+    needs: detect-changes
+    uses: ./.github/workflows/reusable.docker.yaml
+    secrets: inherit
+    with:
+      application_path: docker/whoami
+      package_name: evercall-whoami
+      release: ${{ github.event_name != 'pull_request' }}
+    if: ${{ needs.detect-changes.outputs.whoami == 'true' }}

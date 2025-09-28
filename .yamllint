@@ -1,0 +1,7 @@
+# .yamllint
+extends: default
+
+rules:
+  line-length:
+    max: 240  # Set your desired maximum line length (e.g., 120 characters)
+    level: warning  # You can set this to 'error' if you want to enforce it strictly
