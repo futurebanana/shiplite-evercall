@@ -24,6 +24,7 @@ jobs:
     # Set job outputs to values from filter step
     outputs:
       whoami: ${{ steps.filter.outputs.whoami }}
+      hello-world: ${{ steps.filter.outputs.hello-world }}
 
     steps:
       - uses: actions/checkout@v5
@@ -37,6 +38,8 @@ jobs:
           filters: |
             whoami:
               - 'docker/whoami/**'
+            hello-world:
+              - 'docker/hello-world/**'
 
   whoami:
     needs: detect-changes
@@ -47,3 +50,13 @@ jobs:
       package_name: karstenjakobsen/evercall-whoami
       release: ${{ github.event_name != 'pull_request' }}
     if: ${{ needs.detect-changes.outputs.whoami == 'true' }}
+
+  hello-world:
+    needs: detect-changes
+    uses: ./.github/workflows/reusable.docker.yaml
+    secrets: inherit
+    with:
+      application_path: docker/hello-world
+      package_name: karstenjakobsen/evercall-hello-world
+      release: ${{ github.event_name != 'pull_request' }}
+    if: ${{ needs.detect-changes.outputs.hello-world == 'true' }}
