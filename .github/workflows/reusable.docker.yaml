@@ -61,7 +61,7 @@ on:
         type: string
       docker_push_registry:
         description: "Docker registry to push images to"
-        default: "docker.io"
+        default: "docker.io/karstenjakobsen"
         required: false
         type: string
       setup_node:
@@ -94,7 +94,7 @@ on:
         required: true
         type: string
       docker_push_registry:
-        default: "ps-registry-docker-hosted.publicdns.zone"
+        default: "docker.io"
         required: false
         type: string
       setup_node:
@@ -188,7 +188,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build and/or push Docker image
+      - name: Build Docker image
         id: build-docker-image
         uses: docker/build-push-action@v6
         with:
