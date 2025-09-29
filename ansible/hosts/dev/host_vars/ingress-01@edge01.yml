@@ -1,7 +1,7 @@
 ---
 target_host: edge01
 service_name: ingress-01
-image: "docker.io/karstenjakobsen/shiplite-traefik-ingress:devel-99705aa"
+image: "docker.io/karstenjakobsen/shiplite-traefik-ingress:devel-4a88e61"
 env:
   TZ: "Europe/Copenhagen"
 ports:

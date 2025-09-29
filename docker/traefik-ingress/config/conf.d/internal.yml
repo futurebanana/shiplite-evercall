@@ -20,7 +20,7 @@ http:
         - metricsAuth
 
     dashboard:
-      rule: "Host(`dashboard.localhost`)"
+      rule: "Host(`dashboard.local`)"
       service: api@internal
       middlewares:
         - buildHeader
