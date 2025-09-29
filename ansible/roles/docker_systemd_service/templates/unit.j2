@@ -1,0 +1,64 @@
+# {{ ansible_managed }}
+{% macro params(docker_systemd_service__name, vals) %}
+{% for v in vals %}-{{ docker_systemd_service__name }} {{ v }} {% endfor %}
+{% endmacro %}
+
+[Unit]
+After=docker.service
+PartOf=docker.service
+Requires=docker.service
+
+{% if docker_systemd_service__required_services is defined %}
+{% for service in docker_systemd_service__required_services %}
+After={{ service }}
+Requires={{ service }}
+{% endfor %}
+{% endif %}
+
+[Service]
+{% if docker_systemd_service__env is defined %}
+EnvironmentFile={{ docker_systemd_service__sysconf_dir }}/{{ docker_systemd_service__name }}
+{% endif %}
+ExecStartPre=-/usr/bin/docker stop {{ docker_systemd_service__name }}
+{% if docker_systemd_service__image_pull_policy == "always" %}
+ExecStartPre=-/usr/bin/docker rm -f {{ docker_systemd_service__name }}
+ExecStartPre=/usr/bin/docker pull {{ docker_systemd_service__image }}
+{% elif docker_systemd_service__image_pull_policy == "ifnotpresent" %}
+ExecStartPre=/bin/bash -c 'if [[ "$(docker images -q {{ docker_systemd_service__image }})" == "" ]]; then /usr/bin/docker pull {{ docker_systemd_service__image }}; fi'
+{% endif %}
+{% if docker_systemd_service__wait_for_net_connectivity is defined and docker_systemd_service__wait_for_net_connectivity|bool %}
+ExecStartPre=/bin/sh -c 'until ping -c1 {{ docker_systemd_service__wait_for_net_connectivity_host }}; do sleep 1; done;'
+{% endif %}
+{% if docker_systemd_service__start_pre_actions is defined %}
+{% for action in docker_systemd_service__start_pre_actions %}
+ExecStartPre={{ action }}
+{% endfor %}
+{% endif %}
+{% if docker_systemd_service__start_post_actions is defined %}
+{% for action in docker_systemd_service__start_post_actions %}
+ExecStartPost={{ action }}
+{% endfor %}
+{% endif %}
+
+ExecStart=/usr/bin/docker run --name {{ docker_systemd_service__name }} --rm {{ docker_systemd_service__container_params | join(' \\\n') }} {{ docker_systemd_service__args | default('') | trim }} {{ docker_systemd_service__image }} {{ docker_systemd_service__cmd | default(omit) }}
+
+{% if docker_systemd_service__stop_actions is defined %}
+{% for action in docker_systemd_service__stop_actions %}
+ExecStop={{ action }}
+{% endfor %}
+{% endif %}
+ExecStop=/usr/bin/docker stop {{ docker_systemd_service__name }}
+
+SyslogIdentifier={{ docker_systemd_service__name }}
+KillMode=process
+LimitNOFILE=1048576
+LimitNPROC=1048576
+LimitCORE=infinity
+TimeoutStartSec=1min
+Restart=on-failure
+StartLimitBurst=3
+StartLimitInterval=60s
+TasksMax=infinity
+
+[Install]
+WantedBy=docker.service

@@ -1,0 +1,48 @@
+---
+- name: "Stop if docker_systemd_service__capabilities is not a list"
+  ansible.builtin.assert:
+    that: docker_systemd_service__capabilities | type_debug == 'list'
+    msg: "docker_systemd_service__capabilities must be a list."
+  when:
+    - docker_systemd_service__capabilities is defined
+    - docker_systemd_service__capabilities | length > 0
+
+- name: "Stop if docker_systemd_service__ulimits is not a list"
+  ansible.builtin.assert:
+    that: docker_systemd_service__ulimits | type_debug == 'list'
+    msg: "docker_systemd_service__ulimits must be a list."
+  when:
+    - docker_systemd_service__ulimits is defined
+    - docker_systemd_service__ulimits | length > 0
+
+- name: "Stop if docker_systemd_service__etc_hosts is not a list"
+  ansible.builtin.assert:
+    that: docker_systemd_service__etc_hosts | type_debug == 'list'
+    msg: "docker_systemd_service__etc_hosts must be a list"
+  when:
+    - docker_systemd_service__etc_hosts is defined
+    - docker_systemd_service__etc_hosts | length > 0
+
+- name: "Stop if docker_systemd_service__volumes is not a list"
+  ansible.builtin.assert:
+    that: docker_systemd_service__volumes | type_debug == 'list'
+    msg: "docker_systemd_service__volumes must be a list"
+  when:
+    - docker_systemd_service__volumes is defined
+    - docker_systemd_service__volumes | length > 0
+
+- name: "Stop if docker_systemd_service__ports is not a list"
+  ansible.builtin.assert:
+    that: docker_systemd_service__ports | type_debug == 'list'
+    msg: "docker_systemd_service__ports must be a list"
+  when:
+    - docker_systemd_service__ports is defined
+    - docker_systemd_service__ports | length > 0
+
+- name: "Stop if docker_systemd_service__links is not a list"
+  ansible.builtin.assert:
+    that: docker_systemd_service__links | type_debug == 'list'
+    msg: "docker_systemd_service__links must be a list"
+  when:
+    - docker_systemd_service__links is defined
+    - docker_systemd_service__links | length > 0

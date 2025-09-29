@@ -1,0 +1,25 @@
+---
+docker_systemd_service__sysconf_dir: "/etc/default"
+docker_systemd_service__name: ""
+docker_systemd_service__image: ""
+docker_systemd_service__volumes: []
+docker_systemd_service__ports: []
+docker_systemd_service__links: []
+docker_systemd_service__enabled: "yes"
+docker_systemd_service__masked: "no"
+docker_systemd_service__state: "started"
+docker_systemd_service__cmd: ""
+docker_systemd_service__restart: "no"
+docker_systemd_service__restart_timer: false
+docker_systemd_service__restart_timer_oncalendar: ""
+docker_systemd_service__restart_timer_command: "/usr/bin/systemctl restart {{ docker_systemd_service__name }}_container.service"
+docker_systemd_service__wait_for_net_connectivity: false
+docker_systemd_service__wait_for_net_connectivity_host: 8.8.8.8
+docker_systemd_service__args: ""
+docker_systemd_service__stop_actions: []
+docker_systemd_service__start_pre_actions: []
+docker_systemd_service__start_post_actions: []
+docker_systemd_service__labels: []
+
+# ifnotpresent, never
+docker_systemd_service__image_pull_policy: "ifnotpresent"

@@ -1,0 +1,17 @@
+---
+#
+# Checking that required variables are set
+#
+- name: "Check vars | Checking that required variables are set"
+  fail: msg="{{ item }} is empty or not defined"
+  when: vars[item] is undefined or vars[item] == ""
+  with_items:
+    - docker_systemd_service__sysconf_dir
+    - docker_systemd_service__name
+    - docker_systemd_service__image
+    - docker_systemd_service__ports
+    - docker_systemd_service__links
+    - docker_systemd_service__enabled
+    - docker_systemd_service__masked
+    - docker_systemd_service__state
+    - docker_systemd_service__image_pull_policy

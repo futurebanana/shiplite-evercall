@@ -2,7 +2,32 @@
 # Ansible yaml invengtory file for development environment
 all:
   children:
-    dev:
+    debian:
       hosts:
-        ix1-dev-edge-01:
-          ansible_host: 127.0.0.1
+        edge01:
+          ansible_host: 86.52.144.219
+          ansible_user: manager
+          ansible_port: 34
+        worker01:
+          ansible_host: 86.52.144.219
+          ansible_user: manager
+          ansible_port: 34
+
+    services:
+      hosts:
+        hello-world01@edge01:
+          target_host: edge01
+          service_name: hello-world-1
+          image: "docker.io/karstenjakobsen/shiplite-hello-world:latest"
+          env:
+            TZ: "Europe/Copenhagen"
+          ports:
+            - "8085:8080"
+        hello-world02@edge01:
+          target_host: edge01
+          service_name: hello-world-2
+          image: "docker.io/karstenjakobsen/shiplite-hello-world:latest"
+          env:
+            TZ: "Europe/Copenhagen"
+          ports:
+            - "8086:8080"

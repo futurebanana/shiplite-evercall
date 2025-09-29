@@ -9,9 +9,7 @@
 	"customizations": {
 		"vscode": {
 			"settings": {
-				"files.encoding": "utf8",
-				"files.eol": "\n",
-				"editor.formatOnSave": true
+				"files.encoding": "utf8"
 			},
 			"extensions": [
 				"redhat.vscode-yaml",

@@ -1,0 +1,79 @@
+---
+- name: Install | Create ENV file for {{ docker_systemd_service__name }}_container.service
+  become: true
+  template:
+    src: env.j2
+    dest: "{{ docker_systemd_service__sysconf_dir }}/{{ docker_systemd_service__name }}"
+    owner: root
+    group: root
+    mode: "0600"
+  when:
+    - docker_systemd_service__env is defined
+    - docker_systemd_service__env|length > 0
+    - docker_systemd_service__restart != 'yes'
+  register: env_file
+
+- name: Install | Create label file for {{ docker_systemd_service__name }}_container.service
+  become: true
+  template:
+    src: labels.j2
+    dest: "{{ docker_systemd_service__sysconf_dir }}/{{ docker_systemd_service__name }}_labels"
+    owner: root
+    group: root
+    mode: "0600"
+  when:
+    - docker_systemd_service__labels is defined
+    - docker_systemd_service__labels|length > 0
+    - not docker_systemd_service__restart == 'yes'
+  register: label_file
+
+- name: Install | Create unit {{ docker_systemd_service__name }}_container.service
+  become: true
+  template:
+    src: unit.j2
+    dest: /etc/systemd/system/{{ docker_systemd_service__name }}_container.service
+    owner: root
+    group: root
+    mode: "0644"
+  register: unit_file
+  when:
+    - not docker_systemd_service__restart == 'yes'
+
+- name: "Install | Enabled: {{ docker_systemd_service__enabled }} , state: {{ docker_systemd_service__state }} , service: {{ docker_systemd_service__name }}"
+  become: true
+  register: container_installed
+  ignore_errors: "{{ ansible_check_mode }}"
+  ansible.builtin.systemd:
+    name: "{{ docker_systemd_service__name }}_container.service"
+    daemon_reload: true
+    enabled: "{{ docker_systemd_service__enabled }}"
+    masked: "{{ docker_systemd_service__masked }}"
+    state: "{{ docker_systemd_service__state }}"
+  when:
+    - not docker_systemd_service__restart == 'yes'
+
+- name: "Install | Restart {{ docker_systemd_service__name }} container"
+  become: true
+  ignore_errors: "{{ ansible_check_mode }}"
+  ansible.builtin.systemd:
+    name: "{{ docker_systemd_service__name }}_container.service"
+    daemon_reload: true
+    enabled: "{{ docker_systemd_service__enabled }}"
+    masked: "{{ docker_systemd_service__masked }}"
+    state: "restarted"
+  when:
+    - (unit_file.changed or label_file.changed or env_file.changed or docker_systemd_service__restart == 'yes')
+    - not ansible_check_mode
+    - not container_installed.changed
+
+- name: "Install | Check if {{ docker_systemd_service__name }} container is running"
+  become: true
+  ansible.builtin.shell: "systemctl is-active {{ docker_systemd_service__name }}_container"
+  register: container_service
+  until: container_service.rc == 0
+  retries: 10
+  delay: 15
+  changed_when: false
+  when:
+    - not ansible_check_mode
+    - docker_systemd_service__state in ['started','restarted']

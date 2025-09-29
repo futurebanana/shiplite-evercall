@@ -1,0 +1,155 @@
+---
+
+- name: "Compile docker run parameters"
+  set_fact:
+    docker_systemd_service__container_params: []
+  when:
+    - not docker_systemd_service__restart == 'yes'
+
+- name: "Check for docker_systemd_service__container_hostname"
+  set_fact:
+    docker_systemd_service__container_params: "{{ docker_systemd_service__container_params + [ '-h ' + docker_systemd_service__container_hostname ] }}"
+  when:
+    - docker_systemd_service__container_hostname is defined
+    - docker_systemd_service__container_hostname | length > 0
+    - not docker_systemd_service__restart == 'yes'
+
+- name: "Check for docker_systemd_service__entrypoint"
+  set_fact:
+    docker_systemd_service__container_params: "{{ docker_systemd_service__container_params + [ '--entrypoint ' + docker_systemd_service__entrypoint ] }}"
+  when:
+    - docker_systemd_service__entrypoint is defined
+    - docker_systemd_service__entrypoint | length > 0
+    - not docker_systemd_service__restart == 'yes'
+
+- name: "Check for docker_systemd_service__env"
+  set_fact:
+    docker_systemd_service__container_params: "{{ docker_systemd_service__container_params + [ '--env-file ' + docker_systemd_service__sysconf_dir + '/' + docker_systemd_service__name ] }}"
+  when:
+    - docker_systemd_service__env is defined
+    - docker_systemd_service__env | length > 0
+    - not docker_systemd_service__restart == 'yes'
+
+- name: "Check for docker_systemd_service__labels"
+  set_fact:
+    docker_systemd_service__container_params: "{{ docker_systemd_service__container_params + [ '--label-file ' + docker_systemd_service__sysconf_dir + '/' + docker_systemd_service__name + '_labels' ] }}"
+  when:
+    - docker_systemd_service__labels is defined
+    - docker_systemd_service__labels | length > 0
+    - not docker_systemd_service__restart == 'yes'
+
+- name: "Check for docker_systemd_service__memory"
+  set_fact:
+    docker_systemd_service__container_params: "{{ docker_systemd_service__container_params + [ '--memory ' + docker_systemd_service__memory ] }}"
+  when:
+    - docker_systemd_service__memory is defined
+    - docker_systemd_service__memory | length > 0
+    - not docker_systemd_service__restart == 'yes'
+
+- name: "Check for docker_systemd_service__memory_reservation"
+  set_fact:
+    docker_systemd_service__container_params: "{{ docker_systemd_service__container_params + [ '--memory-reservation ' + docker_systemd_service__memory_reservation ] }}"
+  when:
+    - docker_systemd_service__memory_reservation is defined
+    - docker_systemd_service__memory_reservation | length > 0
+    - not docker_systemd_service__restart == 'yes'
+
+- name: "Check for docker_systemd_service__network_mode"
+  set_fact:
+    docker_systemd_service__container_params: "{{ docker_systemd_service__container_params + [ '--net=' + docker_systemd_service__network_mode ] }}"
+  when:
+    - docker_systemd_service__network_mode is defined
+    - docker_systemd_service__network_mode | length > 0
+    - not docker_systemd_service__restart == 'yes'
+
+- name: "Check for docker_systemd_service__privileged"
+  set_fact:
+    docker_systemd_service__container_params: "{{ docker_systemd_service__container_params + [ '--privileged' ] }}"
+  when:
+    - docker_systemd_service__privileged is defined
+    - docker_systemd_service__privileged | bool
+    - not docker_systemd_service__restart == 'yes'
+
+- name: "Check for docker_systemd_service__capabilities"
+  set_fact:
+    docker_systemd_service__container_params: "{{ docker_systemd_service__container_params + [ '--cap-add ' + item ] }}"
+  with_items:
+    - "{{ docker_systemd_service__capabilities | list }}"
+  when:
+    - docker_systemd_service__capabilities is defined
+    - docker_systemd_service__capabilities | length > 0
+    - not docker_systemd_service__restart == 'yes'
+
+- name: "Check for docker_systemd_service__ulimits"
+  set_fact:
+    docker_systemd_service__container_params: "{{ docker_systemd_service__container_params + [ '--ulimit ' + item ] }}"
+  with_items:
+    - "{{ docker_systemd_service__ulimits | list }}"
+  when:
+    - docker_systemd_service__ulimits is defined
+    - docker_systemd_service__ulimits | length > 0
+    - not docker_systemd_service__restart == 'yes'
+
+- name: "Check for docker_systemd_service__etc_hosts"
+  set_fact:
+    docker_systemd_service__container_params: "{{ docker_systemd_service__container_params + [ '--add-host ' + item ] }}"
+  with_items:
+    - "{{ docker_systemd_service__etc_hosts | list }}"
+  when:
+    - docker_systemd_service__etc_hosts is defined
+    - docker_systemd_service__etc_hosts | length > 0
+    - not docker_systemd_service__restart == 'yes'
+
+- name: "Check for docker_systemd_service__volumes"
+  set_fact:
+    docker_systemd_service__container_params: "{{ docker_systemd_service__container_params + [ '--volume ' + item ] }}"
+  with_items:
+    - "{{ docker_systemd_service__volumes | list }}"
+  when:
+    - docker_systemd_service__volumes is defined
+    - docker_systemd_service__volumes | length > 0
+    - not docker_systemd_service__restart == 'yes'
+
+- name: "Check for docker_systemd_service__ports"
+  set_fact:
+    docker_systemd_service__container_params: "{{ docker_systemd_service__container_params + [ '--publish ' + item ] }}"
+  with_items:
+    - "{{ docker_systemd_service__ports | list }}"
+  when:
+    - docker_systemd_service__ports is defined
+    - docker_systemd_service__ports | length > 0
+    - not docker_systemd_service__restart == 'yes'
+
+- name: "Check for docker_systemd_service__links"
+  set_fact:
+    docker_systemd_service__container_params: "{{ docker_systemd_service__container_params + [ '--link ' + item ] }}"
+  with_items:
+    - "{{ docker_systemd_service__links | list }}"
+  when:
+    - docker_systemd_service__links is defined
+    - docker_systemd_service__links | length > 0
+    - not docker_systemd_service__restart == 'yes'
+
+- name: "Check for docker_systemd_service__pid"
+  set_fact:
+    docker_systemd_service__container_params: "{{ docker_systemd_service__container_params + [ '--pid=' + docker_systemd_service__pid ] }}"
+  when:
+    - docker_systemd_service__pid is defined
+    - docker_systemd_service__pid | length > 0
+    - not docker_systemd_service__restart == 'yes'
+
+- name: "Check for docker_systemd_service__oom_score_adjust"
+  set_fact:
+    docker_systemd_service__container_params: "{{ docker_systemd_service__container_params + [ '--oom-score-adj=' + docker_systemd_service__oom_score_adjust|string ] }}"
+  when:
+    - docker_systemd_service__oom_score_adjust is defined
+    - docker_systemd_service__oom_score_adjust is number
+    - not docker_systemd_service__restart == 'yes'
+
+- name: "Check for docker_systemd_service__user"
+  set_fact:
+    docker_systemd_service__container_params: "{{ docker_systemd_service__container_params + [ '--user ' + docker_systemd_service__user ] }}"
+  when:
+    - docker_systemd_service__user is defined
+    - docker_systemd_service__user | length > 0
+    - not docker_systemd_service__restart == 'yes'

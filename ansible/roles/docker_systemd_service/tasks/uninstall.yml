@@ -1,0 +1,56 @@
+---
+- name: Uninstall | Remove ENV file for {{ docker_systemd_service__name }}_container.service
+  become: true
+  ansible.builtin.file:
+    path: "{{ docker_systemd_service__sysconf_dir }}/{{ docker_systemd_service__name }}"
+    state: absent
+
+- name: "Uninstall | Disable and stop {{ docker_systemd_service__name }} for state {{ docker_systemd_service__state }}"
+  become: true
+  ignore_errors: true
+  ansible.builtin.systemd:
+    name: "{{ docker_systemd_service__name }}_container.service"
+    enabled: false
+    state: stopped
+
+- name: "Uninstall | Disable and stop {{ docker_systemd_service__name }}_container_restart.path for state {{ docker_systemd_service__state }}"
+  become: true
+  ignore_errors: true
+  ansible.builtin.systemd:
+    name: "{{ docker_systemd_service__name }}_container_restart.path"
+    enabled: false
+    state: stopped
+
+- name: "Uninstall | Disable and stop {{ docker_systemd_service__name }}_container_restart.service for state {{ docker_systemd_service__state }}"
+  become: true
+  ignore_errors: true
+  ansible.builtin.systemd:
+    name: "{{ docker_systemd_service__name }}_container_restart.service"
+    enabled: false
+    state: stopped
+
+- name: Uninstall | Remove unit {{ docker_systemd_service__name }}_container.service'
+  become: true
+  ignore_errors: true
+  ansible.builtin.file:
+    path: /etc/systemd/system/{{ docker_systemd_service__name }}_container.service
+    state: absent
+
+- name: "Uninstall | Remove unit {{ docker_systemd_service__name }}_container_restart.path"
+  become: true
+  ignore_errors: true
+  ansible.builtin.file:
+    path: "/etc/systemd/system/{{ docker_systemd_service__name }}_container_restart.path"
+    state: absent
+
+- name: "Uninstall | Remove unit {{ docker_systemd_service__name }}_container_restart.service"
+  become: true
+  ignore_errors: true
+  ansible.builtin.file:
+    path: "/etc/systemd/system/{{ docker_systemd_service__name }}_container_restart.service"
+    state: absent
+
+- name: Uninstall | Reload systemd units
+  become: true
+  ansible.builtin.systemd:
+    daemon_reload: yes
