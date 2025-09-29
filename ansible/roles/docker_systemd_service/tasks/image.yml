@@ -1,15 +1,20 @@
 ---
-- name: "Image | Pull always docker_systemd image {{ docker_systemd_service__image }}"
+- name: "Image | Pull docker_systemd image {{ docker_systemd_service__image }}"
   become: true
   changed_when: false
-  ansible.builtin.shell: docker pull "{{ docker_systemd_service__image }}"
+  community.docker.docker_image:
+    name: "{{ docker_systemd_service__image }}"
+    source: pull
   when:
     - (docker_systemd_service__image_pull_policy == "always")
+    - not docker_systemd_service__restart == 'yes'
 
 - name: "Image | Pull docker_systemd image {{ docker_systemd_service__image }}"
   become: true
   changed_when: false
-  ansible.builtin.shell: /bin/bash -c 'if [[ "$(docker images -q {{ docker_systemd_service__image }})" == "" ]]; then /usr/bin/docker pull {{ docker_systemd_service__image }}; fi'
+  community.docker.docker_image:
+    name: "{{ docker_systemd_service__image }}"
+    source: pull
   when:
     - (docker_systemd_service__image_pull_policy == "ifnotpresent")
     - not docker_systemd_service__restart == 'yes'
