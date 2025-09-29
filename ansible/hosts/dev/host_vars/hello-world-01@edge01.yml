@@ -5,5 +5,8 @@ image: "docker.io/karstenjakobsen/shiplite-hello-world:devel-8629a8c"
 env:
   TZ: "Europe/Copenhagen"
   SECRET: "{{ secrets.secret__hello_world_01 }}"
-ports:
-  - "8085:8080"
+labels:
+  traefik.enable: true
+  traefik.http.routers.hello-world-01.rule: Host(`hello-world-01.karstenjakobsen.dk`)
+  traefik.http.routers.hello-world-01.entrypoints: http
+  traefik.http.routers.hello-world-01.service: hello-world-01
