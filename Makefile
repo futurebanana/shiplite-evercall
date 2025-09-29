@@ -6,7 +6,7 @@ TAG ?= devel-$(VERSION)
 DOCKER_FILE ?= Dockerfile
 
 # ---- Projects Config ----
-PROJECTS = whoami hello-world
+PROJECTS = whoami hello-world traefik-ingress
 
 # Default target
 .PHONY: all

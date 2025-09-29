@@ -25,3 +25,7 @@ all:
     whoami:
       hosts:
         whoami-01@edge01:
+
+    runners:
+      hosts:
+        edge01:

@@ -1,0 +1,40 @@
+---
+
+# Traefik dynamic configuration file
+# See https://doc.traefik.io/traefik/getting-started/configuration-overview/#the-dynamic-configuration
+
+http:
+
+  routers:
+
+    ping:
+      rule: "Path(`/ping`)"
+      service: ping@internal
+      middlewares:
+        - buildHeader
+
+    metrics:
+      rule: "Path(`/metrics`)"
+      service: prometheus@internal
+      middlewares:
+        - metricsAuth
+
+    dashboard:
+      rule: "Host(`dashboard.localhost`)"
+      service: api@internal
+      middlewares:
+        - buildHeader
+
+  middlewares:
+
+    metricsAuth:
+      basicAuth:
+        users:
+          - "metrics:$apr1$VRHYnLQj$uBSR1dxECbRbBfUugPIfy/"
+
+    buildHeader:
+      headers:
+        customRequestHeaders:
+          X-Server-Build: '{{env "VERSION"}}'
+        customResponseHeaders:
+          X-Server-Build: '{{env "VERSION"}}'
