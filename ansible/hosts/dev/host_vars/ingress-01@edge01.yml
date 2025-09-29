@@ -1,0 +1,12 @@
+---
+target_host: edge01
+service_name: ingress-01
+image: "docker.io/karstenjakobsen/shiplite-traefik-ingress:devel-99705aa"
+env:
+  TZ: "Europe/Copenhagen"
+ports:
+  - "8090:8080"
+  - "8091:443"
+  - "8092:80"
+volumes:
+  - "/var/run/docker.sock:/var/run/docker.sock:ro"

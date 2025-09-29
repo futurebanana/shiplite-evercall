@@ -17,11 +17,15 @@ all:
       children:
         web:
         whoami:
+        ingress:
 
     web:
       hosts:
         hello-world-01@edge01:
         hello-world-02@edge01:
+    ingress:
+      hosts:
+        ingress-01@edge01:
     whoami:
       hosts:
         whoami-01@edge01:
