@@ -1,0 +1,17 @@
+---
+
+- include_vars: "{{ansible_distribution}}.yml"
+  tags:
+    - always
+
+- import_tasks: check_vars.yml
+  tags:
+    - ssh_keys
+    - ssh_keys:check_vars
+    - check_vars
+
+- import_tasks: authorized_keys.yml
+  tags:
+    - ssh_keys
+    - ssh_keys:authorized_keys
+    - authorized_keys

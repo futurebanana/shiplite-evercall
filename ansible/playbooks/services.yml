@@ -25,6 +25,7 @@
         docker_systemd_service__name: "{{ service_name }}"
         docker_systemd_service__image: "{{ image }}"
         docker_systemd_service__state: started
+        docker_systemd_service__network_mode: "{{ network_mode | default('bridge') }}"
         docker_systemd_service__ports: "{{ ports }}"
         docker_systemd_service__env: "{{ env }}"
         docker_systemd_service__volumes: "{{ volumes | default([]) }}"

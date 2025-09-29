@@ -1,0 +1,25 @@
+---
+
+- name: "Template sysctl settings"
+  become: true
+  template:
+    src: sysctl.conf.j2
+    dest: "{{ sysctl__file }}"
+    owner: root
+    group: root
+    mode: '0644'
+
+# We must load the nf_conntract module or the sysctl settings wont be applied upon reboots
+- name: "Template module settings"
+  become: true
+  template:
+    src: modules.conf.j2
+    dest: "{{ sysctl__file_modules }}"
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: "Reload sysctl settings"
+  become: true
+  ansible.builtin.shell: "sysctl --system"
+  changed_when: false

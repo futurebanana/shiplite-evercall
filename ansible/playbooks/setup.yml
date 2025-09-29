@@ -1,0 +1,76 @@
+---
+- name: Bootstrap python to flatcar
+  gather_facts: false
+  become: true
+  hosts: all
+  vars:
+    pypy_version: pypy3.11-v7.3.20-linux64
+  tasks:
+
+    - name: Check if python is already installed
+      raw: test -x /opt/bin/python
+      register: python_check
+      ignore_errors: true
+      changed_when: false
+
+    - name: Download pypy archive
+      raw: wget -q -P /opt/ https://downloads.python.org/pypy/{{ pypy_version }}.tar.bz2
+      when:
+        - python_check.rc != 0
+
+    - name: Extract pypy archive
+      raw: tar -xf /opt/{{ pypy_version }}.tar.bz2 -C /opt
+      when:
+        - python_check.rc != 0
+
+    - name: Remove archive
+      raw: rm -rf /opt/{{ pypy_version }}.tar.bz2
+      when:
+        - python_check.rc != 0
+
+    - name: Create /opt/bin for older
+      raw: mkdir -p /opt/bin
+      when:
+        - python_check.rc != 0
+
+    - name: Create symlink for python
+      raw: ln -s  /opt/{{ pypy_version }}/bin/python /opt/bin/python
+      when:
+        - python_check.rc != 0
+
+    - name: Setup pip
+      raw: /opt/bin/python -m ensurepip
+      when:
+        - python_check.rc != 0
+
+    - name: Create symlink for pip
+      raw: ln -s  /opt/{{ pypy_version }}/bin/pip3 /opt/bin/pip
+      when:
+        - python_check.rc != 0
+
+- name: Setup SSH keys, sysctl and pip libraries
+  hosts: all
+
+  tasks:
+
+    - name: Ensure there pip libraries are installed
+      become: true
+      pip:
+        name:
+          - docker-py
+        state: present
+
+  roles:
+
+    # -----------------------------------------------------------
+    # SHARED
+    # -----------------------------------------------------------
+
+    # Add ssh keys for common default users
+    - role: ssh_keys
+      vars:
+        ssh_keys__authorized_keys:
+          - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCfhM/pHuTBsRXsbwkRedIIkpaCHc5YwIsi3dey55TQkbgEvy8t5kOkhws6g6Wtg0rdD8sqdO2P/UJvMDItnqv1k00gcz68c19l12wVDnOMAXWvtDV9183tXykORvNCVbfRB0PQi+VTvqFy2/WmLC1lhphtHTZTUG7iPQbSUZ/SSL6WfR8ASY8vvtoUW+GilL36JF9KauyWsW/xwN52ckWph+IlydBA5loNxbyXBtUMSGlNsYsU7pElI/5z6IfSCEBXDfIqMaJSrjmO4BfLGDOXR5ijcnlTy3ZjzhOh5cRJBCcGMYZ6JTg1OqnxW4T0jEsvkemqeqbnGbknZVY9XuT/TS3oUlXXoNbY7wQDJ6XZBOGqBPsiXWpUHxuwYiVTSmDJyCgrI4yny6lUZ86eIJD5bqb2XqWBS8kbYGEaJUCTQi6kcyl9IykWuocHYSwr2vM5vAYKrWZFyKFml1TC1wQ7gxsp+2Y+sPGw6UnWs9s/pvM7Wiiqg+MDwI/HlO+g/BTw5Q1s6lKvFylqTs1Oy9uUPr8x2jOvylSwd1STRstnv0nIzUfrBqA9AEmXwR7TtJoXhG6Ff1Hqb1lPalbJorb2zDI3KDs58kMuE//i2k9fJ5CI3XBfKFhLhk/mE5uTdcJFqPXbV4Pvd6b3znG0fHtJyKXarYmE4FsR6lvhL0MiNw== xxanx-eg-no"
+
+    # Set common sysctl settings
+    - role: sysctl

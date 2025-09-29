@@ -1,0 +1,9 @@
+---
+
+- name: Set authorized keys
+  become: true
+  ansible.posix.authorized_key:
+    user: "{{ ssh_keys__user }}"
+    key: "{{ lookup('template', 'keys.j2') }}"
+    state: present
+    exclusive: True

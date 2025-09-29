@@ -1,0 +1,7 @@
+---
+
+sysctl__settings_add: []
+sysctl__settings_remove: []
+sysctl__settings_extras: []
+sysctl__file: "/etc/sysctl.d/ansible.conf"
+sysctl__file_modules: "/etc/modules-load.d/ansible.conf"
