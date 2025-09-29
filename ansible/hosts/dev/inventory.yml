@@ -1,0 +1,27 @@
+---
+# Ansible yaml invengtory file for development environment
+all:
+  children:
+    flatcar:
+      hosts:
+        edge01:
+          ansible_host: 86.52.144.219
+          ansible_user: manager
+          ansible_port: 34
+        worker01:
+          ansible_host: 86.52.144.219
+          ansible_user: manager
+          ansible_port: 34
+
+    services:
+      children:
+        web:
+        whoami:
+
+    web:
+      hosts:
+        hello-world-01@edge01:
+        hello-world-02@edge01:
+    whoami:
+      hosts:
+        whoami-01@edge01:
