@@ -2,5 +2,5 @@
 **/.gitattributes !filter !diff
 **/.gitignore !filter !diff
 
-# Encrypt all YAML files in ansible/hosts
-ansible/hosts/**/inventory.yaml filter=git-crypt diff=git-crypt
+# Encrypt all YAML secret files in ansible/hosts
+ansible/hosts/**/**_secrets.yml filter=git-crypt diff=git-crypt
