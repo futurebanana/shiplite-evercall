@@ -183,3 +183,6 @@ poetry.lock
 
 # Asterisk packages
 **/packages/asterisk-*
+
+.vault-pass-dev.txt
+.vault-pass-prod.txt

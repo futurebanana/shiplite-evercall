@@ -1,12 +1,12 @@
-# Variables
+# ---- Docker Config ----
 VERSION ?= $(shell git rev-parse --short HEAD)
 DOCKER_REGISTRY = docker.io/karstenjakobsen
 IMAGE_PREFIX ?= shiplite-
 TAG ?= devel-$(VERSION)
 DOCKER_FILE ?= Dockerfile
 
-# Docker project files
-PROJECTS = whoami
+# ---- Projects Config ----
+PROJECTS = whoami hello-world
 
 # Default target
 .PHONY: all
