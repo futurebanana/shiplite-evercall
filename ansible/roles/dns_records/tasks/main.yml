@@ -1,20 +1,10 @@
 ---
-
-- name: Create DND record in DigitalOcean
-  community.digitalocean.digital_ocean_domain_record:
-    state: present
-    domain: karstenjakobsen.dk
-    type: A
-    name: "hello-world-01"
-    data: 3.124.205.98
-  delegate_to: localhost
+- import_tasks: check_vars.yml
   tags:
     - dns_records
-  register: do_dns_record
+    - dns_records:check_vars
 
-- name: Debug output
-  debug:
-    msg: "DNS record created with {{ do_dns_record }}"
-  when: do_dns_record.changed
+- import_tasks: record.yml
   tags:
     - dns_records
+    - dns_records:record

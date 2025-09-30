@@ -1,0 +1,8 @@
+---
+dns_records__name: []
+dns_records__type: "A"
+dns_records__domain: "karstenjakobsen.dk"
+dns_records__ttl: 60
+dns_records__value: "{{ hostvars[target_host].ansible_host }}"
+dns_records__state: "present"
+dns_records__provider: "digital_ocean"
