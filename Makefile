@@ -45,6 +45,12 @@ login:
 	docker login $(DOCKER_REGISTRY)
 	@echo "Docker login successful."
 
+.PHONY: ansible-services
+ansible-services:
+	@echo "Running Ansible playbook to deploy services..."
+	cd ansible && \
+	ansible-playbook -i hosts/dev/inventory.yml playbooks/services.yml
+
 .PHONY: help
 help:
 	@echo "Available Targets:"

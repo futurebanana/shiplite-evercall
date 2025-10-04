@@ -33,7 +33,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run Ansible Playbook
-        working-directory: ./ansible
+      - name: Run Ansible Playbook to deploy services
         run:
-          ansible-playbook -i hosts/dev/inventory.yml playbooks/services.yml --check
+          make ansible-services
