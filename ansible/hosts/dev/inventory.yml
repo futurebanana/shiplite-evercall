@@ -13,6 +13,13 @@ all:
           ansible_user: core
           ansible_port: 22
 
+    github_runner:
+      hosts:
+        edge01:
+          ansible_host: 3.124.205.98
+          ansible_user: core
+          ansible_port: 22
+
     services:
       children:
         web:

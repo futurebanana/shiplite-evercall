@@ -20,7 +20,7 @@ http:
         - metricsAuth
 
     dashboard:
-      rule: "Host(`dashboard.local`)"
+      rule: "Host(`edge01.karstenjakobsen.dk`)"
       service: api@internal
       middlewares:
         - buildHeader
