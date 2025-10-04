@@ -51,6 +51,6 @@ echo "Run pre-commit autoupdate..."
 pre-commit autoupdate
 pre-commit run --all
 
-ansible-galaxy role install -r requirements.yml
+# ansible-galaxy role install -r requirements.yml
 
 echo "Welcome to the jungle..."
