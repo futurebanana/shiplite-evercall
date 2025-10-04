@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-sudo apt-get update && sudo apt-get install -y shellcheck git-crypt wget curl
+sudo apt-get update && sudo apt-get install -y shellcheck wget curl
 
 pip3 install -r requirements.txt
 

@@ -4,24 +4,24 @@
   strategy: free
   serial: 10
 
-  # Include secrets
-  pre_tasks:
-    - name: Include vars of secrets.yml into the 'secrets' variable.
-      ansible.builtin.include_vars:
-        file: ../hosts/{{ environment_name }}/static_vars/{{ ansible_host }}_secrets.yml
-        name: secrets
+  # # Include secrets
+  # pre_tasks:
+  #   - name: Include vars of secrets.yml into the 'secrets' variable.
+  #     ansible.builtin.include_vars:
+  #       file: ../hosts/{{ environment_name }}/static_vars/{{ ansible_host }}_secrets.yml
+  #       name: secrets
 
-    # Fail if secrets is not defined
-    - name: Fail if secrets is not defined
-      ansible.builtin.fail:
-        msg: "The 'secrets' variable is not defined. Please check your secrets.yml file."
-      when: secrets is not defined
+  #   # Fail if secrets is not defined
+  #   - name: Fail if secrets is not defined
+  #     ansible.builtin.fail:
+  #       msg: "The 'secrets' variable is not defined. Please check your secrets.yml file."
+  #     when: secrets is not defined
 
-    - debug:
-        msg:
-          - "{{ labels | traefik2dns | default([]) }}"
-          - "{{ hostvars[target_host].ansible_host }}"
-          - "{{ hostvars[target_host].inventory_hostname }}"
+  #   - debug:
+  #       msg:
+  #         - "{{ labels | traefik2dns | default([]) }}"
+  #         - "{{ hostvars[target_host].ansible_host }}"
+  #         - "{{ hostvars[target_host].inventory_hostname }}"
 
   roles:
     - role: docker_systemd_service
