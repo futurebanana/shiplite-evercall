@@ -40,6 +40,8 @@ jobs:
               - 'docker/whoami/**'
             hello-world:
               - 'docker/hello-world/**'
+            traefik-ingress:
+              - 'docker/traefik-ingress/**'
 
   whoami:
     needs: detect-changes
@@ -60,3 +62,13 @@ jobs:
       package_name: karstenjakobsen/evercall-hello-world
       release: ${{ github.event_name != 'pull_request' }}
     if: ${{ needs.detect-changes.outputs.hello-world == 'true' }}
+
+  traefik-ingress:
+    needs: detect-changes
+    uses: ./.github/workflows/reusable.docker.yaml
+    secrets: inherit
+    with:
+      application_path: docker/traefik-ingress
+      package_name: karstenjakobsen/evercall-traefik-ingress
+      release: ${{ github.event_name != 'pull_request' }}
+    if: ${{ needs.detect-changes.outputs.traefik-ingress == 'true' }}

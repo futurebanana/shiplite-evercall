@@ -1,0 +1,31 @@
+---
+name: Release
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "ansible/hosts/dev/host_vars.yml"
+
+permissions: write-all
+
+jobs:
+  release:
+    runs-on: self-hosted
+
+    steps:
+
+      - uses: actions/checkout@v5
+        if: ${{ github.event_name != 'pull_request' }}
+
+      # Setup python
+      - name: Setup Python
+        uses: actions/setup-python@v6
+
+      # pip install requirements
+      - name: Install Ansible and dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt

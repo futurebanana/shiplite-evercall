@@ -6,7 +6,6 @@
 
   # Include secrets
   pre_tasks:
-
     - name: Include vars of secrets.yml into the 'secrets' variable.
       ansible.builtin.include_vars:
         file: ../hosts/{{ environment_name }}/static_vars/{{ ansible_host }}_secrets.yml
@@ -18,6 +17,12 @@
         msg: "The 'secrets' variable is not defined. Please check your secrets.yml file."
       when: secrets is not defined
 
+    - debug:
+        msg:
+          - "{{ labels | traefik2dns | default([]) }}"
+          - "{{ hostvars[target_host].ansible_host }}"
+          - "{{ hostvars[target_host].inventory_hostname }}"
+
   roles:
     - role: docker_systemd_service
       delegate_to: "{{ target_host }}"
@@ -25,7 +30,25 @@
         docker_systemd_service__name: "{{ service_name }}"
         docker_systemd_service__image: "{{ image }}"
         docker_systemd_service__state: started
-        docker_systemd_service__ports: "{{ ports }}"
+        docker_systemd_service__network_mode: "{{ network_mode | default('bridge') }}"
+        docker_systemd_service__ports: "{{ ports | default([]) }}"
         docker_systemd_service__env: "{{ env }}"
         docker_systemd_service__volumes: "{{ volumes | default([]) }}"
         docker_systemd_service__labels: "{{ labels | default([]) }}"
+
+    # Create A record for hosts in 'ingress' group
+    - role: dns_records
+      vars:
+        dns_records__name:
+          - "{{ hostvars[target_host].inventory_hostname }}"
+        dns_records__value: "{{ hostvars[target_host].ansible_host }}"
+      when:
+        - target_host in groups['ingress']
+
+    - role: dns_records
+      vars:
+        dns_records__name: "{{ labels | traefik2dns | default([]) }}"
+        dns_records__value: "{{ hostvars[target_host].ansible_host }}"
+      when:
+        - target_host not in groups['ingress']
+        - (labels | traefik2dns | default([])) | length > 0

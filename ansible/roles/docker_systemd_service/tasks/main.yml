@@ -3,42 +3,36 @@
   tags:
     - docker_systemd_service
     - docker_systemd_service:check_vars
-    - check_vars
 
 - import_tasks: image.yml
   when: docker_systemd_service__state != "absent"
   tags:
     - docker_systemd_service
     - docker_systemd_service:image
-    - image
 
 - import_tasks: validate_params.yml
   when: docker_systemd_service__state != "absent"
   tags:
     - docker_systemd_service
     - docker_systemd_service:validate_params
-    - validate_params
 
 - import_tasks: compile_params.yml
   when: docker_systemd_service__state != "absent"
   tags:
     - docker_systemd_service
     - docker_systemd_service:compile_params
-    - compile_params
 
 - import_tasks: install.yml
   when: docker_systemd_service__state != "absent"
   tags:
     - docker_systemd_service
     - docker_systemd_service:install
-    - install
 
 - import_tasks: uninstall.yml
   when: docker_systemd_service__state == "absent"
   tags:
     - docker_systemd_service
     - docker_systemd_service:uninstall
-    - uninstall
 
 - include_role:
     name: systemd_timer
@@ -55,6 +49,5 @@
   tags:
     - docker_systemd_service
     - docker_systemd_service:uninstall
-    - uninstall
 
 - meta: flush_handlers

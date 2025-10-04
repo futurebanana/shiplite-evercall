@@ -5,23 +5,38 @@ all:
     flatcar:
       hosts:
         edge01:
-          ansible_host: 86.52.144.219
-          ansible_user: manager
-          ansible_port: 34
+          ansible_host: 3.124.205.98
+          ansible_user: core
+          ansible_port: 22
         worker01:
-          ansible_host: 86.52.144.219
-          ansible_user: manager
-          ansible_port: 34
+          ansible_host: 3.124.205.98
+          ansible_user: core
+          ansible_port: 22
+
+    github_runner:
+      hosts:
+        edge01:
+          ansible_host: 3.124.205.98
+          ansible_user: core
+          ansible_port: 22
 
     services:
       children:
         web:
         whoami:
+        ingress:
 
     web:
       hosts:
         hello-world-01@edge01:
         hello-world-02@edge01:
+    ingress:
+      hosts:
+        ingress-01@edge01:
     whoami:
       hosts:
         whoami-01@edge01:
+
+    runners:
+      hosts:
+        edge01:

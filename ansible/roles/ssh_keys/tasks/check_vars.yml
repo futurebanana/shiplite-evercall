@@ -1,0 +1,11 @@
+---
+
+#
+# Checking that required variables are set
+#
+- name: Checking that required variables are set
+  fail: msg="{{ item }} is empty or not defined"
+  when: vars[item] is undefined or vars[item] == ""
+  with_items:
+    - ssh_keys__user
+    - ssh_keys__authorized_keys

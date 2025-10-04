@@ -1,0 +1,7 @@
+---
+
+- import_tasks: settings.yml
+  tags:
+    - sysctl
+    - sysctl:settings
+    - settings

@@ -1,0 +1,20 @@
+---
+
+- name: Create DNS record in DigitalOcean
+  community.digitalocean.digital_ocean_domain_record:
+    state: "{{ dns_records__state }}"
+    domain: "{{ dns_records__domain }}"
+    type: "{{ dns_records__type }}"
+    name: "{{ item }}"
+    data: "{{ dns_records__value }}"
+    ttl: "{{ dns_records__ttl }}"
+  delegate_to: localhost
+  register: __dns_records__result
+  loop: "{{ dns_records__name }}"
+  when:
+    - dns_records__provider == "digital_ocean"
+
+- name: Debug output
+  debug:
+    msg: "DNS record created with {{ __dns_records__result }}"
+  when: __dns_records__result.changed

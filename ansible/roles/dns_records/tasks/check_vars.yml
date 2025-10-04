@@ -1,0 +1,13 @@
+---
+#
+# Checking that required variables are set
+#
+- name: "Check vars | Checking that required variables are set"
+  fail: msg="{{ item }} is empty or not defined"
+  when: vars[item] is undefined or vars[item] == ""
+  with_items:
+    - dns_records__name
+    - dns_records__type
+    - dns_records__domain
+    - dns_records__ttl
+    - dns_records__value

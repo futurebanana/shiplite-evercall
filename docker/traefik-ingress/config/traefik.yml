@@ -1,0 +1,44 @@
+---
+
+log:
+  level: DEBUG
+
+api:
+  dashboard: true
+
+ping:
+  entryPoint: "https"
+
+entryPoints:
+  http:
+    address: ":80"
+  https:
+    address: ":443"
+
+providers:
+  file:
+    directory: /etc/traefik/conf.d
+    watch: true
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    exposedByDefault: true
+    watch: true
+
+experimental:
+  plugins:
+    coraza:
+      moduleName: github.com/jcchavezs/coraza-http-wasm-traefik
+      version: v0.3.0
+    htransformation:
+      moduleName: github.com/tomMoulard/htransformation
+      version: v0.3.3
+
+accessLog:
+  format: json
+  fields:
+    defaultMode: keep
+    headers:
+      defaultMode: keep   # Logs all headers
+
+metrics:
+  prometheus: {}

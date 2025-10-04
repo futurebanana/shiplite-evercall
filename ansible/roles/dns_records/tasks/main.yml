@@ -1,0 +1,10 @@
+---
+- import_tasks: check_vars.yml
+  tags:
+    - dns_records
+    - dns_records:check_vars
+
+- import_tasks: record.yml
+  tags:
+    - dns_records
+    - dns_records:record
