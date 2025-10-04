@@ -7,7 +7,8 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt update -y && apt upgrade -y && useradd -m docker
 RUN apt install -y --no-install-recommends \
-    curl dotnet-sdk-8.0 jq build-essential libssl-dev libffi-dev python3 python3-venv python3-dev python3-pip lsb-release
+    curl dotnet-sdk-8.0 jq build-essential libssl-dev libffi-dev python3 python3-venv python3-dev python3-pip lsb-release \
+    openssh-client rsync ca-certificates git unzip zip xz-utils
 
 
 RUN cd /home/docker && mkdir actions-runner && cd actions-runner \
