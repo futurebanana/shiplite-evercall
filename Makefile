@@ -4,7 +4,8 @@ DOCKER_REGISTRY = docker.io/karstenjakobsen
 IMAGE_PREFIX ?= shiplite-
 TAG ?= devel-$(VERSION)
 DOCKER_FILE ?= Dockerfile
-TARGET_SERVER ?= edge01
+ANSIBLE_TARGET_SERVER ?= edge01
+ANSIBLE_CHECK_MODE ?= false
 
 # ---- Projects Config ----
 PROJECTS = whoami hello-world traefik-ingress github-runner
@@ -50,7 +51,7 @@ login:
 ansible-services:
 	@echo "Running Ansible playbook to deploy services..."
 	cd ansible && \
-	ansible-playbook -i hosts/dev/inventory.yml playbooks/services.yml -e "target_server=$(TARGET_SERVER)"
+	ansible-playbook -i hosts/dev/inventory.yml playbooks/services.yml -e "target_server=$(ANSIBLE_TARGET_SERVER)"
 
 .PHONY: help
 help:
