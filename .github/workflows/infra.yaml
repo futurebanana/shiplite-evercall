@@ -60,5 +60,5 @@ jobs:
       # Run your playbook (now with SSH available)
       - name: Run Ansible Playbook to deploy services
         env:
-          DO_API_TOKEN_DEV: ${{ secrets.DO_API_TOKEN_DEV }}
+          DO_API_TOKEN: ${{ secrets.DO_API_TOKEN_DEV }}
         run: make ansible-services
