@@ -25,6 +25,8 @@ jobs:
     outputs:
       whoami: ${{ steps.filter.outputs.whoami }}
       hello-world: ${{ steps.filter.outputs.hello-world }}
+      github-runner: ${{ steps.filter.outputs.github-runner }}
+      traefik-ingress: ${{ steps.filter.outputs.traefik-ingress }}
 
     steps:
       - uses: actions/checkout@v5
@@ -42,6 +44,8 @@ jobs:
               - 'docker/hello-world/**'
             traefik-ingress:
               - 'docker/traefik-ingress/**'
+            github-runner:
+              - 'docker/github-runner/**'
 
   whoami:
     needs: detect-changes
@@ -72,3 +76,13 @@ jobs:
       package_name: karstenjakobsen/evercall-traefik-ingress
       release: ${{ github.event_name != 'pull_request' }}
     if: ${{ needs.detect-changes.outputs.traefik-ingress == 'true' }}
+
+  github-runner:
+    needs: detect-changes
+    uses: ./.github/workflows/reusable.docker.yaml
+    secrets: inherit
+    with:
+      application_path: docker/github-runner
+      package_name: karstenjakobsen/shiplite-github-runner
+      release: ${{ github.event_name != 'pull_request' }}
+    if: ${{ needs.detect-changes.outputs.github-runner == 'true' }}

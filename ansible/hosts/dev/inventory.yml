@@ -20,21 +20,11 @@ all:
           ansible_user: core
           ansible_port: 22
 
-    services:
-      children:
-        web:
-        whoami:
-        ingress:
-
-    web:
+    services-edge01:
       hosts:
         hello-world-01@edge01:
         hello-world-02@edge01:
-    ingress:
-      hosts:
         ingress-01@edge01:
-    whoami:
-      hosts:
         whoami-01@edge01:
 
     runners:
