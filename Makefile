@@ -45,12 +45,12 @@ login:
 	docker login $(DOCKER_REGISTRY)
 	@echo "Docker login successful."
 
-# Example: make ansible-services service=github-runner-01@edge01
+# Example: make ansible-services service=github-runner-01@edge01 check=true
 .PHONY: ansible-services
 ansible-services:
 	@echo "Running Ansible playbook to deploy services..."
 	cd ansible && \
-	ansible-playbook -i hosts/dev/inventory.yml playbooks/services.yml --limit "$(service)"
+	ansible-playbook -i hosts/dev/inventory.yml playbooks/services.yml --limit "$(service)" --diff $(if $(check),--check)
 
 
 .PHONY: help

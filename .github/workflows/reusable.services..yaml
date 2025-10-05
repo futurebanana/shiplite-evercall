@@ -53,7 +53,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v5
-        if: ${{ github.event_name != 'pull_request' }}
 
       # Materialize the SSH key from the repo secret
       - name: Configure SSH key for Ansible
@@ -91,4 +90,4 @@ jobs:
       - name: Run Ansible Playbook to deploy services
         env:
           DO_API_TOKEN: ${{ secrets.DO_API_TOKEN_DEV }}
-        run: make ansible-services service="${{ inputs.service }}" environment="${{ inputs.environment }}"
+        run: make ansible-services service="${{ inputs.service }}" environment="${{ inputs.environment }}" check="${{ inputs.check_mode }}"
