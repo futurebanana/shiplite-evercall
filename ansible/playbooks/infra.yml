@@ -71,19 +71,7 @@
       vars:
         ssh_keys__authorized_keys:
           - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCfhM/pHuTBsRXsbwkRedIIkpaCHc5YwIsi3dey55TQkbgEvy8t5kOkhws6g6Wtg0rdD8sqdO2P/UJvMDItnqv1k00gcz68c19l12wVDnOMAXWvtDV9183tXykORvNCVbfRB0PQi+VTvqFy2/WmLC1lhphtHTZTUG7iPQbSUZ/SSL6WfR8ASY8vvtoUW+GilL36JF9KauyWsW/xwN52ckWph+IlydBA5loNxbyXBtUMSGlNsYsU7pElI/5z6IfSCEBXDfIqMaJSrjmO4BfLGDOXR5ijcnlTy3ZjzhOh5cRJBCcGMYZ6JTg1OqnxW4T0jEsvkemqeqbnGbknZVY9XuT/TS3oUlXXoNbY7wQDJ6XZBOGqBPsiXWpUHxuwYiVTSmDJyCgrI4yny6lUZ86eIJD5bqb2XqWBS8kbYGEaJUCTQi6kcyl9IykWuocHYSwr2vM5vAYKrWZFyKFml1TC1wQ7gxsp+2Y+sPGw6UnWs9s/pvM7Wiiqg+MDwI/HlO+g/BTw5Q1s6lKvFylqTs1Oy9uUPr8x2jOvylSwd1STRstnv0nIzUfrBqA9AEmXwR7TtJoXhG6Ff1Hqb1lPalbJorb2zDI3KDs58kMuE//i2k9fJ5CI3XBfKFhLhk/mE5uTdcJFqPXbV4Pvd6b3znG0fHtJyKXarYmE4FsR6lvhL0MiNw== xxanx-eg-no"
+          - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCkVeSZZIX2AApB6wot3haCb81r1blqlzGZkyk3f5bbrmjDQhGj6wlEO3f+OqmYmPwV6GybytSSzFJpivaHaR4/K0eMQ1ZGh3OZ6EIt4D5shTOgUfzvST5XqwlfR9RI7dVirfBb2MlqtvEcktLa6GnMhXOKbM9zeVs1fQQrofL9LK9YtM+LTnDLJT8xnvIrrpBe0u/34dsspx1M8+pA4AdXFDpUdCTGLYFvlHgt6pTUEwUQZ7yyegjABRixgsMnSKoJxGeKBuEvJIlebufL8Ok1YCjlFCdlrpYPO1h+2sAl18EPBFYieswlGB6YEevpo8hSoxC43JJlqBTTfvFq6KwG7DMaadg4MFn6s/XQ7Uze4hXa4PVgg7qpN+6QA/jDgwL/a3ZrXIPhf0oTIMewasS7inS8cnDaw6iTdtcuGDlz/pzBQDPXbglemKJ+0UuMIubpomCXcgC4Bc0LWMJF69bDT1gnnHVvbWAMEBDkBgEudzuTCFdMlNh0z8ayw/JAUMXby35o22EXIdw9n7XV3spq8z4C3fKoQOh3IqQR1EmGdBST418hyoh6iScvHLq15e5Du5RL9fnYkORDEmCGZbzmItzHQNei+R5Tn1wS75kuIz58tlyxIpNPhIihtHZSs22gUEjsdv5/44mNejAR5otw9Rv9P5/ePFeei+DHJYdJ+w== github-ansible-deploy"
 
     # Set common sysctl settings
     - role: sysctl
-
-- name: Install GitHub Actions Runner
-  hosts: github_runner
-  become: true
-
-  roles:
-    - role: monolithprojects.github_actions_runner
-      vars:
-        github_account: futurebanana
-        github_repo: shiplite-evercall
-        runner_user: core
-        access_token: "{{ lookup('env', 'PERSONAL_ACCESS_TOKEN') }}"
-        hide_sensitive_logs: false
