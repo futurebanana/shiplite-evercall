@@ -8,7 +8,7 @@
   pre_tasks:
     - name: Include vars of secrets.yml into the 'secrets' variable.
       ansible.builtin.include_vars:
-        file: ../hosts/{{ environment_name }}/static_vars/{{ ansible_host }}_secrets.yml
+        file: ../hosts/{{ environment_name }}/secrets/{{ ansible_host }}.yml
         name: secrets
 
     # Fail if secrets is not defined
