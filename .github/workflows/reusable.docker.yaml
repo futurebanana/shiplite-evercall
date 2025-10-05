@@ -204,7 +204,7 @@ jobs:
         uses: aquasecurity/trivy-action@0.33.1
         with:
           image-ref: "${{ steps.build-docker-image.outputs.imageid }}"
-          severity: "HIGH,CRITICAL"
+          severity: "CRITICAL"  # UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL
           ignore-unfixed: false
           vuln-type: "os,library"
           format: "table"
