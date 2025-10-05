@@ -4,8 +4,6 @@ DOCKER_REGISTRY = docker.io/karstenjakobsen
 IMAGE_PREFIX ?= shiplite-
 TAG ?= devel-$(VERSION)
 DOCKER_FILE ?= Dockerfile
-ANSIBLE_TARGET_SERVER ?= edge01
-ANSIBLE_CHECK_MODE ?= false
 
 # ---- Projects Config ----
 PROJECTS = whoami hello-world traefik-ingress github-runner
@@ -47,11 +45,13 @@ login:
 	docker login $(DOCKER_REGISTRY)
 	@echo "Docker login successful."
 
+# Example: make ansible-services service=github-runner-01@edge01
 .PHONY: ansible-services
 ansible-services:
 	@echo "Running Ansible playbook to deploy services..."
 	cd ansible && \
-	ansible-playbook -i hosts/dev/inventory.yml playbooks/services.yml -e "target_server=$(ANSIBLE_TARGET_SERVER)"
+	ansible-playbook -i hosts/dev/inventory.yml playbooks/services.yml --limit "$(service)"
+
 
 .PHONY: help
 help:

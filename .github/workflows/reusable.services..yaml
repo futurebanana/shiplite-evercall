@@ -1,25 +1,45 @@
 ---
-name: Release
+name: Release Services
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
-    paths:
-      - "ansible/hosts/dev/host_vars/*@edge01.yml"
+    inputs:
+      environment:
+        description: "Deployment environment"
+        required: true
+        type: string
+        default: "dev"
+      runner:
+        description: "Runner to use for deployment"
+        required: false
+        type: string
+        default: "self-hosted"
+      service:
+        description: "Service to deploy"
+        required: true
+        type: string
+  workflow_call:
+    inputs:
+      environment:
+        description: "Deployment environment"
+        required: true
+        type: string
+        default: "dev"
+      runner:
+        description: "Runner to use for deployment"
+        required: false
+        type: string
+        default: "self-hosted"
+      service:
+        description: "Service to deploy"
+        required: true
+        type: string
 
 permissions: write-all
 
 jobs:
   release:
-    runs-on: self-hosted
-
-    env:
-      # Let Ansible use the key we’ll write below
-      ANSIBLE_SSH_PRIVATE_KEY_FILE: ~/.ssh/id_ed25519
-      # Skip interactive host key prompts (flip to 'True' and manage known_hosts if you want strict checking)
-      ANSIBLE_HOST_KEY_CHECKING: 'False'
+    runs-on: ${{ inputs.runner }}
 
     steps:
       - uses: actions/checkout@v5
@@ -61,4 +81,4 @@ jobs:
       - name: Run Ansible Playbook to deploy services
         env:
           DO_API_TOKEN: ${{ secrets.DO_API_TOKEN_DEV }}
-        run: make ansible-services
+        run: make ansible-services service="${{ inputs.service }}" environment="${{ inputs.environment }}"

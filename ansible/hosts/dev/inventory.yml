@@ -20,12 +20,13 @@ all:
           ansible_user: core
           ansible_port: 22
 
-    services-edge01:
+    services:
       hosts:
         hello-world-01@edge01:
         hello-world-02@edge01:
         ingress-01@edge01:
         whoami-01@edge01:
+        github-runner-01@edge01:
 
     runners:
       hosts:
