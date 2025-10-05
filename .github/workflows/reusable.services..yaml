@@ -87,7 +87,17 @@ jobs:
           pip install -r requirements.txt
 
       # Run your playbook (now with SSH available)
+      - name: Run Ansible Playbook to deploy services (check mode)
+        env:
+          DO_API_TOKEN: ${{ secrets.DO_API_TOKEN_DEV }}
+        run: |
+          make ansible-services service="${{ inputs.service }}" environment="${{ inputs.environment }}" check=true
+        if: ${{ inputs.check_mode == true }}
+
+      # Run your playbook (now with SSH available)
       - name: Run Ansible Playbook to deploy services
         env:
           DO_API_TOKEN: ${{ secrets.DO_API_TOKEN_DEV }}
-        run: make ansible-services service="${{ inputs.service }}" environment="${{ inputs.environment }}" check="${{ inputs.check_mode }}"
+        run: |
+          make ansible-services service="${{ inputs.service }}" environment="${{ inputs.environment }}"
+        if: ${{ inputs.check_mode == false }}

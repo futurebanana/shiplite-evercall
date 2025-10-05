@@ -59,4 +59,4 @@ jobs:
       environment: dev
       runner: self-hosted
       service: whoami-01@edge01
-      check_mode: ${{ github.event_name != 'pull_request' }}
+      check_mode: ${{ github.event_name == 'pull_request' }}
