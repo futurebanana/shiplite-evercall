@@ -4,5 +4,8 @@ service_name: whoami-01
 image: "docker.io/karstenjakobsen/shiplite-whoami:devel-d879164"
 env:
   TZ: "Europe/Copenhagen"
-ports:
-  - "8087:80"
+labels:
+  traefik.enable: true
+  traefik.http.routers.whoami-01.rule: Host(`whoami-01.karstenjakobsen.dk`)
+  traefik.http.routers.whoami-01.entrypoints: http
+  traefik.http.routers.whoami-01.service: whoami-01
