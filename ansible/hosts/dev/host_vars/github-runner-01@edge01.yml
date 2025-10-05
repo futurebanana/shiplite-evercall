@@ -1,10 +1,10 @@
 ---
 target_host: edge01
 service_name: github-runner-01
-image: "docker.io/karstenjakobsen/shiplite-github-runner:devel-b7ed5aa"
+image: "docker.io/karstenjakobsen/shiplite-github-runner:pr-6-feat-runner-d0f3483"
 env:
   TZ: "Europe/Copenhagen"
-  REPOSITORY: "{{ secrets.secret__hello_world_01 }}"
-  ACCESS_TOKEN: "{{ secrets.secret__hello_world_01 }}"
+  REPOSITORY: "{{ secrets.secret__github_runner_repository }}"
+  ACCESS_TOKEN: "{{ secrets.secret__github_runner_access_token }}"
   RUNNER_NAME: "runner-edge01"
   RUNNER_LABELS: "self-hosted,Linux,X64,edge01"
