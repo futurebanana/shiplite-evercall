@@ -18,6 +18,11 @@ on:
         description: "Service to deploy"
         required: true
         type: string
+      check_mode:
+        description: "Run in check mode (Ansible dry run)"
+        required: false
+        type: boolean
+        default: true
   workflow_call:
     inputs:
       environment:
@@ -34,6 +39,11 @@ on:
         description: "Service to deploy"
         required: true
         type: string
+      check_mode:
+        description: "Run in check mode (Ansible dry run)"
+        required: false
+        type: boolean
+        default: true
 
 permissions: write-all
 

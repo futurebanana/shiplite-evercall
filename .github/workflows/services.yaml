@@ -7,7 +7,12 @@ on:
     branches:
       - main
     paths:
-      - "ansible/hosts/dev/host_vars/*edge01.yml"
+      - "ansible/hosts/dev/host_vars/**"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "ansible/hosts/dev/host_vars/**"
 
 permissions: write-all
 
@@ -53,3 +58,4 @@ jobs:
       environment: dev
       runner: self-hosted
       service: whoami-01@edge01
+      check_mode: ${{ github.event_name != 'pull_request' }}
