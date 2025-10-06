@@ -92,7 +92,7 @@ jobs:
           mkdir -p ~/.ansible
           echo "${{ secrets.ANSIBLE_VAULT_SECRET_DEV }}" > ~/.ansible/dev-vault-pass.txt
           chmod 600 ~/.ansible/dev-vault-pass.txt
-        if: ${{ inputs.check_mode == false && inputs.environment == 'dev' }}
+        if: ${{ inputs.environment == 'dev' }}
 
       - name: Run Ansible Playbook to deploy services (check mode)
         env:
