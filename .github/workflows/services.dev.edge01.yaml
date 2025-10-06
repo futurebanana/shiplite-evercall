@@ -55,7 +55,7 @@ jobs:
     if: ${{ needs.detect-changes.outputs.whoami == 'true' }}
     with:
       environment: dev
-      runner: self-hosted
+      runner: edge01
       service: whoami@edge01
       check_mode: ${{ github.event_name == 'pull_request' }}
 

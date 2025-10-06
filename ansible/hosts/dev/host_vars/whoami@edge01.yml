@@ -6,6 +6,7 @@ service__replicas:
     service__env:
       TZ: "Europe/Copenhagen"
       TEST: "Hest"
+      PEST: "Ko"
     service__labels:
       traefik.enable: true
       traefik.http.routers.whoami.rule: Host(`whoami.karstenjakobsen.dk`)
