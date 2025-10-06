@@ -1,0 +1,60 @@
+---
+name: Release Services Development
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "ansible/hosts/dev/**"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "ansible/hosts/dev/**"
+
+permissions: write-all
+
+jobs:
+  # Job to run change detection
+  detect-changes:
+    runs-on: ubuntu-24.04
+
+    # Set job outputs to values from filter step
+    outputs:
+      github-runner: ${{ steps.filter.outputs.github-runner }}
+      hello-world: ${{ steps.filter.outputs.hello-world }}
+      traefik-ingress: ${{ steps.filter.outputs.traefik-ingress }}
+      whoami: ${{ steps.filter.outputs.whoami }}
+
+    steps:
+      - uses: actions/checkout@v5
+        if: ${{ github.event_name != 'pull_request' }}
+
+      # For pull requests it's not necessary to checkout the code
+      # Looks for changes in these paths
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            whoami:
+              - 'ansible/hosts/dev/host_vars/whoami@edge01.yml'
+              - 'ansible/hosts/dev/group_vars/webservers.yml'
+            hello-world:
+              - 'ansible/hosts/dev/host_vars/hello-world@edge01.yml'
+            traefik-ingress:
+              - 'ansible/hosts/dev/host_vars/traefik-ingress@edge01.yml'
+            github-runner:
+              - 'ansible/hosts/dev/host_vars/github-runner@edge01.yml'
+
+  whoami:
+    needs: detect-changes
+    uses: ./.github/workflows/reusable.services..yaml
+    secrets: inherit
+    if: ${{ needs.detect-changes.outputs.whoami == 'true' }}
+    with:
+      environment: dev
+      runner: self-hosted
+      service: whoami@edge01
+      check_mode: ${{ github.event_name == 'pull_request' }}

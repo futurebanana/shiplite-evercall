@@ -1,7 +1,7 @@
 ---
 - hosts: services
   gather_facts: false
-  strategy: free
+  # strategy: free
   serial: 10
 
   # Include secrets
@@ -23,18 +23,27 @@
           - "{{ hostvars[target_host].ansible_host }}"
           - "{{ hostvars[target_host].inventory_hostname }}"
 
-  roles:
-    - role: docker_systemd_service
-      delegate_to: "{{ target_host }}"
+  tasks:
+
+    - name: Deploy docker services via systemd
+      ansible.builtin.include_role:
+        name: docker_systemd_service
+        apply:
+          delegate_to: "{{ target_host }}"
+          become: true
+      loop: "{{ service__replicas }}"
+      loop_control:
+        loop_var: service
+        index_var: idx
       vars:
-        docker_systemd_service__name: "{{ service_name }}"
-        docker_systemd_service__image: "{{ image }}"
+        docker_systemd_service__name: "{{ service.service__name }}"
+        docker_systemd_service__image: "{{ service.service__image }}"
         docker_systemd_service__state: started
-        docker_systemd_service__network_mode: "{{ network_mode | default('bridge') }}"
-        docker_systemd_service__ports: "{{ ports | default([]) }}"
-        docker_systemd_service__env: "{{ env }}"
-        docker_systemd_service__volumes: "{{ volumes | default([]) }}"
-        docker_systemd_service__labels: "{{ labels | default([]) }}"
+        docker_systemd_service__network_mode: "{{ service.service__network_mode | default('bridge') }}"
+        docker_systemd_service__ports: "{{ service.service__ports | default([]) }}"
+        docker_systemd_service__env: "{{ service.service__env | default({}) }}"
+        docker_systemd_service__volumes: "{{ service.service__volumes | default([]) }}"
+        docker_systemd_service__labels: "{{ service.service__labels | default({}) }}"
 
     # # Create A record for hosts in 'ingress' group
     # - role: dns_records
