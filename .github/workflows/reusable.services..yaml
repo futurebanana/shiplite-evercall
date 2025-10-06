@@ -94,6 +94,14 @@ jobs:
           make ansible-services service="${{ inputs.service }}" environment="${{ inputs.environment }}" check=true
         if: ${{ inputs.check_mode == true }}
 
+      # Create vault.txt from input ansible_vault_secret
+      - name: Create Ansible Vault ID file
+        if: ${{ inputs.check_mode == false }}
+        run: |
+          mkdir -p ~/.ansible
+          echo "${{ secrets.ANSIBLE_VAULT_SECRET_DEV }}" > ~/.ansible/dev-vault-pass.txt
+          chmod 600 ~/.ansible/dev-vault-pass.txt
+
       # Run your playbook (now with SSH available)
       - name: Run Ansible Playbook to deploy services
         env:

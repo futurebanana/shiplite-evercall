@@ -52,6 +52,11 @@ ansible-services:
 	cd ansible && \
 	ansible-playbook -i hosts/dev/inventory.yml playbooks/services.yml --limit "$(service)" --diff $(if $(check),--check)
 
+.PHONY: ansible-encrypt-dev
+ansible-encrypt-dev:
+	@echo "Encrypting secrets for development environment..."
+	cd ansible && \
+	ansible-vault encrypt --encrypt-vault-id dev hosts/dev/secrets/github-runner@edge01.yml
 
 .PHONY: help
 help:

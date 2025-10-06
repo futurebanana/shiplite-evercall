@@ -57,5 +57,15 @@ jobs:
       environment: dev
       runner: self-hosted
       service: whoami@edge01
-      # check_mode true if pull_request
+      check_mode: ${{ github.event_name == 'pull_request' }}
+
+  github-runner:
+    needs: detect-changes
+    uses: ./.github/workflows/reusable.services..yaml
+    secrets: inherit
+    if: ${{ needs.detect-changes.outputs.github-runner == 'true' }}
+    with:
+      environment: dev
+      runner: ubuntu-24.04  # Use a non-self-hosted runner to avoid recursion
+      service: github-runner@edge01
       check_mode: ${{ github.event_name == 'pull_request' }}
