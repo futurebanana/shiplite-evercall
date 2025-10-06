@@ -1,5 +1,6 @@
 {
     "docker/whoami":"0.0.1",
     "docker/hello-world":"0.0.1",
-    "docker/github-runner":"0.0.1"
+    "docker/github-runner":"0.0.1",
+    "docker/traefik-ingress":"0.0.1"
 }
