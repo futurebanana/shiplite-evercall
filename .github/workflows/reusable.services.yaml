@@ -86,7 +86,13 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      # Run your playbook (now with SSH available)
+      - name: Setup ansible vault passwords
+        run: |
+          mkdir -p ~/.ansible
+          echo "${{ secrets.ANSIBLE_VAULT_SECRET_DEV }}" > ~/.ansible/dev-vault-pass.txt
+          echo "${{ secrets.ANSIBLE_VAULT_SECRET_PROD }}" > ~/.ansible/prod-vault-pass.txt
+          chmod 600 ~/.ansible/dev-vault-pass.txt ~/.ansible/prod-vault-pass.txt
+
       - name: Run Ansible Playbook to deploy services (check mode)
         env:
           DO_API_TOKEN: ${{ secrets.DO_API_TOKEN_DEV }}
@@ -94,7 +100,6 @@ jobs:
           make ansible-services service="${{ inputs.service }}" environment="${{ inputs.environment }}" check=true
         if: ${{ inputs.check_mode == true }}
 
-      # Run your playbook (now with SSH available)
       - name: Run Ansible Playbook to deploy services
         env:
           DO_API_TOKEN: ${{ secrets.DO_API_TOKEN_DEV }}
