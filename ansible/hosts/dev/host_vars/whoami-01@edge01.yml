@@ -1,0 +1,12 @@
+---
+target_host: edge01
+service_name: whoami-01
+image: "docker.io/karstenjakobsen/shiplite-whoami:latest"
+env:
+  TZ: "Europe/Copenhagen"
+  TEST: "Hest"
+labels:
+  traefik.enable: true
+  traefik.http.routers.whoami-01.rule: Host(`whoami-01.karstenjakobsen.dk`)
+  traefik.http.routers.whoami-01.entrypoints: http
+  traefik.http.routers.whoami-01.service: whoami-01
