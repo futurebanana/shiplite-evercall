@@ -9,3 +9,4 @@ service__replicas:
       ACCESS_TOKEN: "{{ secrets.secret__github_runner_access_token }}"
       RUNNER_NAME: "runner-edge01"
       RUNNER_LABELS: "self-hosted,Linux,X64,edge01"
+      TEST: hest
