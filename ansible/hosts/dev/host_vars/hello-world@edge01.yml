@@ -6,6 +6,8 @@ service__replicas:
     service__env:
       TZ: "Europe/Copenhagen"
       SECRET: "{{ secrets.secret__hello_world }}"
+      PEST: "Ko"
+      TEST: "Test"
     service__labels:
       traefik.enable: true
       traefik.http.routers.hello-world.rule: Host(`hello-world.karstenjakobsen.dk`)
