@@ -50,7 +50,7 @@ jobs:
 
   whoami:
     needs: detect-changes
-    uses: ./.github/workflows/reusable.services..yaml
+    uses: ./.github/workflows/reusable.services.yaml
     secrets: inherit
     if: ${{ needs.detect-changes.outputs.whoami == 'true' }}
     with:
@@ -61,7 +61,7 @@ jobs:
 
   github-runner:
     needs: detect-changes
-    uses: ./.github/workflows/reusable.services..yaml
+    uses: ./.github/workflows/reusable.services.yaml
     secrets: inherit
     if: ${{ needs.detect-changes.outputs.github-runner == 'true' }}
     with:
