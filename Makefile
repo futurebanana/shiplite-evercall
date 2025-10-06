@@ -54,9 +54,19 @@ ansible-services:
 
 .PHONY: ansible-encrypt-dev
 ansible-encrypt-dev:
-	@echo "Encrypting secrets for development environment..."
+	@echo "Encrypting secrets for development environment for all files in hosts/dev/secrets/"
 	cd ansible && \
-	ansible-vault encrypt --encrypt-vault-id dev hosts/dev/secrets/github-runner@edge01.yml
+	for file in hosts/dev/secrets/*; do \
+		ansible-vault encrypt --encrypt-vault-id dev $$file; \
+	done
+
+.PHONY: ansible-encrypt-prod
+ansible-encrypt-prod:
+	@echo "Encrypting secrets for production environment for all files in hosts/prod/secrets/"
+	cd ansible && \
+	for file in hosts/prod/secrets/*; do \
+		ansible-vault encrypt --encrypt-vault-id prod $$file; \
+	done
 
 .PHONY: help
 help:
