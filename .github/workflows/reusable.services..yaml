@@ -1,0 +1,103 @@
+---
+name: Release Services
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Deployment environment"
+        required: true
+        type: string
+        default: "dev"
+      runner:
+        description: "Runner to use for deployment"
+        required: false
+        type: string
+        default: "self-hosted"
+      service:
+        description: "Service to deploy"
+        required: true
+        type: string
+      check_mode:
+        description: "Run in check mode (Ansible dry run)"
+        required: false
+        type: boolean
+        default: true
+  workflow_call:
+    inputs:
+      environment:
+        description: "Deployment environment"
+        required: true
+        type: string
+        default: "dev"
+      runner:
+        description: "Runner to use for deployment"
+        required: false
+        type: string
+        default: "self-hosted"
+      service:
+        description: "Service to deploy"
+        required: true
+        type: string
+      check_mode:
+        description: "Run in check mode (Ansible dry run)"
+        required: false
+        type: boolean
+        default: true
+
+permissions: write-all
+
+jobs:
+  release:
+    runs-on: ${{ inputs.runner }}
+
+    steps:
+      - uses: actions/checkout@v5
+
+      # Materialize the SSH key from the repo secret
+      - name: Configure SSH key for Ansible
+        shell: bash
+        env:
+          SSH_KEY_DEV: ${{ secrets.SSH_KEY_DEV }}
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          # Write key exactly as provided by the secret
+          printf "%s\n" "$SSH_KEY_DEV" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          # Optional: turn off strict host key checking at the SSH layer, too
+          {
+            echo "Host *"
+            echo "  StrictHostKeyChecking no"
+            echo "  UserKnownHostsFile=/dev/null"
+          } > ~/.ssh/config
+          chmod 600 ~/.ssh/config
+
+      # Setup Python
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      # pip install requirements
+      - name: Install Ansible and dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # Run your playbook (now with SSH available)
+      - name: Run Ansible Playbook to deploy services (check mode)
+        env:
+          DO_API_TOKEN: ${{ secrets.DO_API_TOKEN_DEV }}
+        run: |
+          make ansible-services service="${{ inputs.service }}" environment="${{ inputs.environment }}" check=true
+        if: ${{ inputs.check_mode == true }}
+
+      # Run your playbook (now with SSH available)
+      - name: Run Ansible Playbook to deploy services
+        env:
+          DO_API_TOKEN: ${{ secrets.DO_API_TOKEN_DEV }}
+        run: |
+          make ansible-services service="${{ inputs.service }}" environment="${{ inputs.environment }}"
+        if: ${{ inputs.check_mode == false }}
