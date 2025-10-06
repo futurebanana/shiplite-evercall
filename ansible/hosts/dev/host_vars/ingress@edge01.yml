@@ -1,0 +1,13 @@
+---
+target_host: edge01
+service__replicas:
+  - service__name: ingress
+    service__image: "docker.io/karstenjakobsen/shiplite-traefik-ingress:devel-5db1c93"
+    service__env:
+      TZ: "Europe/Copenhagen"
+    service__network_mode: "bridge"
+    service__ports:
+      - "80:80"
+      - "443:443"
+    service__volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"

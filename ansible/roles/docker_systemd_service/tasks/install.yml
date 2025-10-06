@@ -49,6 +49,9 @@
     enabled: "{{ docker_systemd_service__enabled }}"
     masked: "{{ docker_systemd_service__masked }}"
     state: "{{ docker_systemd_service__state }}"
+  failed_when:
+    - container_installed is failed
+    - not ansible_check_mode
   when:
     - not docker_systemd_service__restart == 'yes'
 

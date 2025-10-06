@@ -22,11 +22,10 @@ all:
 
     services:
       hosts:
-        hello-world-01@edge01:
-        hello-world-02@edge01:
-        ingress-01@edge01:
-        whoami-01@edge01:
-        github-runner-01@edge01:
+        hello-world@edge01:
+        ingress@edge01:
+        whoami@edge01:
+        github-runner@edge01:
 
     runners:
       hosts:
