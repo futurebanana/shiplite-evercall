@@ -50,7 +50,7 @@ ExecStop={{ action }}
 ExecStop=/usr/bin/docker stop {{ docker_systemd_service__name }}
 
 SyslogIdentifier={{ docker_systemd_service__name }}
-KillMode=process
+KillMode=control-group
 LimitNOFILE=1048576
 LimitNPROC=1048576
 LimitCORE=infinity
