@@ -27,6 +27,7 @@ jobs:
       hello-world: ${{ steps.filter.outputs.hello-world }}
       traefik-ingress: ${{ steps.filter.outputs.traefik-ingress }}
       whoami: ${{ steps.filter.outputs.whoami }}
+      portainer: ${{ steps.filter.outputs.portainer }}
 
     steps:
       - uses: actions/checkout@v5
@@ -47,6 +48,8 @@ jobs:
               - 'ansible/hosts/dev/host_vars/traefik-ingress@edge01.yml'
             github-runner:
               - 'ansible/hosts/dev/host_vars/github-runner@edge01.yml'
+            portainer:
+              - 'ansible/hosts/dev/host_vars/portainer@edge01.yml'
 
   whoami:
     needs: detect-changes
@@ -68,4 +71,15 @@ jobs:
       environment: dev
       runner: ubuntu-24.04  # Use a non-self-hosted runner to avoid recursion
       service: github-runner@edge01
+      check_mode: ${{ github.event_name == 'pull_request' }}
+
+  portainer:
+    needs: detect-changes
+    uses: ./.github/workflows/reusable.services.yaml
+    secrets: inherit
+    if: ${{ needs.detect-changes.outputs.portainer == 'true' }}
+    with:
+      environment: dev
+      runner: edge01
+      service: portainer@edge01
       check_mode: ${{ github.event_name == 'pull_request' }}
