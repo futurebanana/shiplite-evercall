@@ -13,12 +13,9 @@ all:
           ansible_user: core
           ansible_port: 22
 
-    github_runner:
+    infrastructure:
       hosts:
-        edge01:
-          ansible_host: 3.124.205.98
-          ansible_user: core
-          ansible_port: 22
+        github-runner@edge01:
 
     services:
       hosts:
@@ -26,7 +23,3 @@ all:
         ingress@edge01:
         whoami@edge01:
         github-runner@edge01:
-
-    runners:
-      hosts:
-        edge01:

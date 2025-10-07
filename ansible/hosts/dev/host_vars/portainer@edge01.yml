@@ -1,0 +1,10 @@
+---
+target_host: edge01
+service__replicas:
+  - service__name: portainer
+    service__image: "portainer/portainer-ce:lts"
+    service__volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "portainer_data:/data"
+    service__env:
+      TZ: "Europe/Copenhagen"
