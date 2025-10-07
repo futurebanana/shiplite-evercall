@@ -15,6 +15,14 @@ entryPoints:
   https:
     address: ":443"
 
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      email: karsten@karstenjakobsen.dk
+      storage: /letsencrypt/acme.json
+      httpChallenge:
+        entryPoint: web
+
 providers:
   file:
     directory: /etc/traefik/conf.d
