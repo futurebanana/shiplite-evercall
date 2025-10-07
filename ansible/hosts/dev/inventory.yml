@@ -16,6 +16,7 @@ all:
     infrastructure:
       hosts:
         github-runner@edge01:
+        portainer@edge01:
 
     services:
       hosts:
@@ -23,3 +24,4 @@ all:
         ingress@edge01:
         whoami@edge01:
         github-runner@edge01:
+        portainer@edge01:
