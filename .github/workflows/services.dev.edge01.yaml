@@ -55,31 +55,42 @@ jobs:
     needs: detect-changes
     uses: ./.github/workflows/reusable.services.yaml
     secrets: inherit
-    if: ${{ needs.detect-changes.outputs.whoami == 'true' }}
     with:
       environment: dev
       runner: edge01
       service: whoami@edge01
       check_mode: ${{ github.event_name == 'pull_request' }}
+    if: ${{ needs.detect-changes.outputs.whoami == 'true' }}
 
   github-runner:
     needs: detect-changes
     uses: ./.github/workflows/reusable.services.yaml
     secrets: inherit
-    if: ${{ needs.detect-changes.outputs.github-runner == 'true' }}
     with:
       environment: dev
       runner: ubuntu-24.04  # Use a non-self-hosted runner to avoid recursion
       service: github-runner@edge01
       check_mode: ${{ github.event_name == 'pull_request' }}
+    if: ${{ needs.detect-changes.outputs.github-runner == 'true' }}
 
   portainer:
     needs: detect-changes
     uses: ./.github/workflows/reusable.services.yaml
     secrets: inherit
-    if: ${{ needs.detect-changes.outputs.portainer == 'true' }}
     with:
       environment: dev
       runner: edge01
       service: portainer@edge01
       check_mode: ${{ github.event_name == 'pull_request' }}
+    if: ${{ needs.detect-changes.outputs.portainer == 'true' }}
+
+  hello-world:
+    needs: detect-changes
+    uses: ./.github/workflows/reusable.services.yaml
+    secrets: inherit
+    with:
+      environment: dev
+      runner: edge01
+      service: hello-world@edge01
+      check_mode: ${{ github.event_name == 'pull_request' }}
+    if: ${{ needs.detect-changes.outputs.hello-world == 'true' }}
