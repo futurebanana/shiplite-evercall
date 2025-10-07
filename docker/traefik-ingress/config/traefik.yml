@@ -21,7 +21,7 @@ certificatesResolvers:
       email: karsten@karstenjakobsen.dk
       storage: /letsencrypt/acme.json
       httpChallenge:
-        entryPoint: web
+        entryPoint: http
 
 providers:
   file:
