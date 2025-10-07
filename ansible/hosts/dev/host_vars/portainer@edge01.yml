@@ -8,3 +8,8 @@ service__replicas:
       - "portainer_data:/data"
     service__env:
       TZ: "Europe/Copenhagen"
+    service__labels:
+      traefik.enable: true
+      traefik.http.routers.portainer.rule: Host(`whoami.karstenjakobsen.dk`) && (PathPrefix(`/portainer`) || PathPrefix(`/api`))
+      traefik.http.routers.portainer.entrypoints: http
+      traefik.http.routers.portainer.service: portainer
