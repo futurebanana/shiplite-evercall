@@ -1,7 +1,7 @@
 ---
 target_host: edge01
 service__replicas:
-  - service__name: hello-world-01
+  - service__name: hello-world
     service__image: "docker.io/karstenjakobsen/shiplite-hello-world:devel-8629a8c"
     service__env:
       TZ: "Europe/Copenhagen"
@@ -12,4 +12,4 @@ service__replicas:
       traefik.enable: true
       traefik.http.routers.hello-world.rule: Host(`hello-world.karstenjakobsen.dk`)
       traefik.http.routers.hello-world.entrypoints: http
-      traefik.http.routers.hello-world.service: hello-world-01
+      traefik.http.routers.hello-world.service: hello-world

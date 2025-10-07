@@ -45,19 +45,21 @@
         docker_systemd_service__volumes: "{{ service.service__volumes | default([]) }}"
         docker_systemd_service__labels: "{{ service.service__labels | default({}) }}"
 
-    # # Create A record for hosts in 'ingress' group
-    # - role: dns_records
-    #   vars:
-    #     dns_records__name:
-    #       - "{{ hostvars[target_host].inventory_hostname }}"
-    #     dns_records__value: "{{ hostvars[target_host].ansible_host }}"
-    #   when:
-    #     - target_host in groups['ingress']
+  roles:
 
-    # - role: dns_records
-    #   vars:
-    #     dns_records__name: "{{ labels | traefik2dns | default([]) }}"
-    #     dns_records__value: "{{ hostvars[target_host].ansible_host }}"
-    #   when:
-    #     - target_host not in groups['ingress']
-    #     - (labels | traefik2dns | default([])) | length > 0
+    # Create A record for hosts in 'ingress' group
+    - role: dns_records
+      vars:
+        dns_records__name:
+          - "{{ hostvars[target_host].inventory_hostname }}"
+        dns_records__value: "{{ hostvars[target_host].ansible_host }}"
+      when:
+        - target_host in groups['ingress']
+
+    - role: dns_records
+      vars:
+        dns_records__name: "{{ labels | traefik2dns | default([]) }}"
+        dns_records__value: "{{ hostvars[target_host].ansible_host }}"
+      when:
+        - target_host not in groups['ingress']
+        - (service.service__labels | traefik2dns | default([])) | length > 0

@@ -13,10 +13,15 @@ all:
           ansible_user: core
           ansible_port: 22
 
+    ingress:
+      hosts:
+        ingress@edge01:
+
     infrastructure:
       hosts:
         github-runner@edge01:
         portainer@edge01:
+        ingress@edge01:
 
     services:
       hosts:
