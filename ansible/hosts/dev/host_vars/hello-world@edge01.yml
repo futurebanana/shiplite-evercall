@@ -11,5 +11,7 @@ service__replicas:
     service__labels:
       traefik.enable: true
       traefik.http.routers.hello-world.rule: Host(`hello-world.karstenjakobsen.dk`)
-      traefik.http.routers.hello-world.entrypoints: http
+      traefik.http.routers.hello-world.entrypoints: https
+      traefik.http.routers.hello-world.tls: true
+      traefik.http.routers.hello-world.tls.certresolver: letsencrypt
       traefik.http.routers.hello-world.service: hello-world

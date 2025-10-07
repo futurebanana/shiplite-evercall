@@ -2,7 +2,7 @@
 target_host: edge01
 service__replicas:
   - service__name: ingress
-    service__image: "docker.io/karstenjakobsen/evercall-traefik-ingress:0.1.0"
+    service__image: "docker.io/karstenjakobsen/evercall-traefik-ingress:0.1.1"
     service__env:
       TZ: "Europe/Copenhagen"
     service__network_mode: "bridge"
