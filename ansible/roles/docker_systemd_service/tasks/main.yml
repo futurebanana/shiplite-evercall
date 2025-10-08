@@ -34,6 +34,15 @@
     - docker_systemd_service
     - docker_systemd_service:uninstall
 
+- debug: var=docker_systemd_service__backup
+
+- import_tasks: backup.yml
+  tags:
+    - docker_systemd_service
+    - docker_systemd_service:backup
+  when:
+    - docker_systemd_service__backup
+
 - include_role:
     name: systemd_timer
   vars:

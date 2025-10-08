@@ -1,0 +1,11 @@
+---
+
+- import_tasks: check_vars.yml
+  tags:
+    - kopia
+    - kopia:check_vars
+
+- import_tasks: install.yml
+  tags:
+    - kopia
+    - kopia:install

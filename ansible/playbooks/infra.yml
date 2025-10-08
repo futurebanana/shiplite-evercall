@@ -48,7 +48,7 @@
       when:
         - python_check.rc != 0
 
-- name: Setup SSH keys, sysctl and pip libraries
+- name: Setup SSH keys, sysctl, libraries, Kopia, docker, ctop
   hosts: flatcar
 
   tasks:
@@ -82,3 +82,5 @@
 
     # Set common sysctl settings
     - role: sysctl
+
+    - role: kopia

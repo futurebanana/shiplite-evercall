@@ -60,6 +60,14 @@ ansible-encrypt-dev:
 		ansible-vault encrypt --encrypt-vault-id dev $$file; \
 	done
 
+.PHONY: ansible-decrypt-dev
+ansible-decrypt-dev:
+	@echo "Decrypting secrets for development environment for all files in hosts/dev/secrets/"
+	cd ansible && \
+	for file in hosts/dev/secrets/*; do \
+		ansible-vault decrypt --vault-id dev $$file; \
+	done
+
 .PHONY: ansible-encrypt-prod
 ansible-encrypt-prod:
 	@echo "Encrypting secrets for production environment for all files in hosts/prod/secrets/"

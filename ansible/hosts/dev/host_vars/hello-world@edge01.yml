@@ -15,3 +15,27 @@ service__replicas:
       traefik.http.routers.hello-world.tls: true
       traefik.http.routers.hello-world.tls.certresolver: letsencrypt
       traefik.http.routers.hello-world.service: hello-world
+    # per-service backup intent (read by a central kopia role)
+    service__backup:
+      paths:
+        - /srv/hello-world/config
+        - /srv/hello-world/data
+      excludes:
+        - "**/*.log"
+        - "**/cache/**"
+        - "**/tmp/**"
+      tags:
+        service: hello-world
+        host: edge01
+        app: hello-world
+        env: "{{ environment_name | default('dev') }}"
+      policy:
+        compression: zstd
+        keep_daily: 7
+        keep_weekly: 4
+        keep_monthly: 6
+      # Optional hooks (run before/after snapshot; good for dumps, pruning, etc.)
+      pre_hooks:
+        - "/usr/bin/true"
+      post_hooks:
+        - "/usr/bin/find /srv/hello-world/data/tmp -type f -mtime +7 -delete"

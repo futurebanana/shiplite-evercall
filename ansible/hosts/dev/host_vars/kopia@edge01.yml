@@ -1,0 +1,30 @@
+# ansible/hosts/dev/host_vars/kopia@edge01.yml
+---
+target_host: edge01
+service__replicas:
+  - service__name: kopia
+    service__image: "kopia/kopia:latest"
+    service__volumes:
+      # Persist Kopia config/cache/logs
+      - "/etc/kopia/config:/app/config"
+      - "/var/cache/kopia:/app/cache"
+      - "/var/log/kopia:/app/logs"
+      # (optional) mount data you want to snapshot via this server
+      # - "/data:/data:ro"
+    service__env:
+      TZ: "Europe/Copenhagen"
+      KOPIA_PASSWORD: "{{ secrets.kopia__repo_password }}"
+      AWS_ACCESS_KEY_ID: "{{ secrets.kopia__aws_access_key_id }}"
+      AWS_SECRET_ACCESS_KEY: "{{ secrets.kopia__aws_secret_access_key }}"
+      AWS_REGION: "eu-central-1"
+    # Start the built-in web UI on 0.0.0.0:51515; TLS is handled by Traefik
+    service__cmd: "server start --address=0.0.0.0:51515 --insecure --ui --server-username={{ secrets.kopia__server_username }} --server-password={{ secrets.kopia__server_password }}"
+      # If you proxy with a path prefix, add: --proxy-path-prefix=/kopia
+    service__labels:
+      traefik.enable: true
+      traefik.http.routers.kopia.rule: Host(`kopia.karstenjakobsen.dk`)
+      traefik.http.routers.kopia.entrypoints: https
+      traefik.http.routers.kopia.tls: true
+      traefik.http.routers.kopia.tls.certresolver: letsencrypt
+      traefik.http.routers.kopia.service: kopia
+      traefik.http.services.kopia.loadbalancer.server.port: 51515

@@ -1,0 +1,34 @@
+---
+
+- name: Backup | Render per-service backup path lists
+  become: true
+  copy:
+    dest: "/etc/kopia/paths.d/{{ (inventory_hostname) | replace('@', '_') }}.list"
+    owner: root
+    group: root
+    mode: "0644"
+    content: |
+      {% for p in (docker_systemd_service__backup.paths | default([])) %}
+      {{ p }}
+      {% endfor %}
+
+- name: Backup | Render per-service .kopiaignore (excludes)
+  become: true
+  copy:
+    dest: "/etc/kopia/paths.d/{{ (inventory_hostname) | replace('@', '_') }}.kopiaignore"
+    owner: root
+    group: root
+    mode: "0644"
+    content: |
+      {% for e in (docker_systemd_service__backup.excludes | default([])) %}
+      {{ e }}
+      {% endfor %}
+
+- name: Backup | Render per-service Kopia meta (tags, policy, hooks)
+  become: true
+  template:
+    src: kopia-meta.yml.j2
+    dest: "/etc/kopia/meta.d/{{ (inventory_hostname) | replace('@', '_') }}.yml"
+    owner: root
+    group: root
+    mode: "0644"
