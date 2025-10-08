@@ -19,38 +19,31 @@
 
     - debug:
         msg:
-          - "{{ labels | traefik2dns | default([]) }}"
+          - "{{ service__labels | traefik2dns | default([]) }}"
           - "{{ hostvars[target_host].ansible_host }}"
           - "{{ hostvars[target_host].inventory_hostname }}"
 
-  tasks:
-
-    - name: Deploy docker services via systemd
-      ansible.builtin.include_role:
-        name: docker_systemd_service
-        apply:
-          delegate_to: "{{ target_host }}"
-          become: true
-      loop: "{{ service__replicas }}"
-      loop_control:
-        loop_var: service
-        index_var: idx
-      vars:
-        docker_systemd_service__name: "{{ service.service__name }}"
-        docker_systemd_service__image: "{{ service.service__image }}"
-        docker_systemd_service__state: started
-        docker_systemd_service__network_mode: "{{ service.service__network_mode | default('bridge') }}"
-        docker_systemd_service__ports: "{{ service.service__ports | default([]) }}"
-        docker_systemd_service__env: "{{ service.service__env | default({}) }}"
-        docker_systemd_service__volumes: "{{ service.service__volumes | default([]) }}"
-        docker_systemd_service__labels: "{{ service.service__labels | default({}) }}"
-        docker_systemd_service__backup: "{{ service.service__backup | default(false) }}"
-        docker_systemd_service__cmd: "{{ service.service__cmd | default('') }}"
-
   roles:
 
+    - name: Deploy docker services via systemd
+      role: docker_systemd_service
+      delegate_to: "{{ target_host }}"
+      become: true
+      vars:
+        docker_systemd_service__name: "{{ service__name }}"
+        docker_systemd_service__image: "{{ service__image }}"
+        docker_systemd_service__state: started
+        docker_systemd_service__network_mode: "{{ service__network_mode | default('bridge') }}"
+        docker_systemd_service__ports: "{{ service__ports | default([]) }}"
+        docker_systemd_service__env: "{{ service__env | default({}) }}"
+        docker_systemd_service__volumes: "{{ service__volumes | default([]) }}"
+        docker_systemd_service__labels: "{{ service__labels | default({}) }}"
+        docker_systemd_service__backup: "{{ service__backup | default(false) }}"
+        docker_systemd_service__cmd: "{{  service__cmd | default('') }}"
+
     # Create A record for hosts in 'ingress' group
-    - role: dns_records
+    - name: Create DNS records for services
+      role: dns_records
       vars:
         dns_records__name:
           - "{{ hostvars[target_host].inventory_hostname }}"
@@ -58,10 +51,11 @@
       when:
         - target_host in groups['ingress']
 
-    - role: dns_records
+    - name: Create DNS records for services with traefik2dns label
+      role: dns_records
       vars:
-        dns_records__name: "{{ labels | traefik2dns | default([]) }}"
+        dns_records__name: "{{ service__labels | traefik2dns | default([]) }}"
         dns_records__value: "{{ hostvars[target_host].ansible_host }}"
       when:
         - target_host not in groups['ingress']
-        - (service.service__labels | traefik2dns | default([])) | length > 0
+        - (service__labels | traefik2dns | default([])) | length > 0

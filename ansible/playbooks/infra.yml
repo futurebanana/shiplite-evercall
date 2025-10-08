@@ -82,5 +82,3 @@
 
     # Set common sysctl settings
     - role: sysctl
-
-    - role: kopia

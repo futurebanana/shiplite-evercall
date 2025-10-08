@@ -1,16 +1,15 @@
 ---
 target_host: edge01
-service__replicas:
-  - service__name: whoami
-    service__image: "docker.io/karstenjakobsen/shiplite-whoami:latest"
-    service__env:
-      TZ: "Europe/Copenhagen"
-      TEST: "Hest"
-      PEST: "Ko"
-    service__labels:
-      traefik.enable: true
-      traefik.http.routers.whoami.rule: Host(`whoami.karstenjakobsen.dk`)
-      traefik.http.routers.whoami.entrypoints: https
-      traefik.http.routers.whoami.tls: true
-      traefik.http.routers.whoami.tls.certresolver: letsencrypt
-      traefik.http.routers.whoami.service: whoami
+service__name: whoami
+service__image: "docker.io/karstenjakobsen/shiplite-whoami:latest"
+service__env:
+  TZ: "Europe/Copenhagen"
+  TEST: "Hest"
+  PEST: "Ko"
+service__labels:
+  traefik.enable: true
+  traefik.http.routers.whoami.rule: Host(`whoami.karstenjakobsen.dk`)
+  traefik.http.routers.whoami.entrypoints: https
+  traefik.http.routers.whoami.tls: true
+  traefik.http.routers.whoami.tls.certresolver: letsencrypt
+  traefik.http.routers.whoami.service: whoami
