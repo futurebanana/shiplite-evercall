@@ -45,7 +45,7 @@
         docker_systemd_service__volumes: "{{ service.service__volumes | default([]) }}"
         docker_systemd_service__labels: "{{ service.service__labels | default({}) }}"
         docker_systemd_service__backup: "{{ service.service__backup | default(false) }}"
-        docker_systemd_service__cmd: "{{ service.service__cmd | default([]) }}"
+        docker_systemd_service__cmd: "{{ service.service__cmd | default('') }}"
 
   roles:
 
