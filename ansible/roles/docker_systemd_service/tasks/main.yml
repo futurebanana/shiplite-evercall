@@ -41,7 +41,7 @@
     - docker_systemd_service
     - docker_systemd_service:backup
   when:
-    - docker_systemd_service__backup
+    - docker_systemd_service__backup.paths is defined
 
 - include_role:
     name: systemd_timer
