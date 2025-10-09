@@ -1,7 +1,7 @@
 ---
 target_host: edge01
 service__name: hello-world
-service__image: "docker.io/karstenjakobsen/shiplite-hello-world:devel-8629a8c"
+service__image: "docker.io/karstenjakobsen/shiplite-hello-world:v0.1.0"
 service__env:
   TZ: "Europe/Copenhagen"
   SECRET: "{{ secrets.secret__hello_world }}"
