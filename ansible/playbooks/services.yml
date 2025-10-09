@@ -25,23 +25,7 @@
 
   roles:
 
-    - name: Deploy docker services via systemd
-      role: docker_systemd_service
-      delegate_to: "{{ target_host }}"
-      become: true
-      vars:
-        docker_systemd_service__name: "{{ service__name }}"
-        docker_systemd_service__image: "{{ service__image }}"
-        docker_systemd_service__state: started
-        docker_systemd_service__network_mode: "{{ service__network_mode | default('bridge') }}"
-        docker_systemd_service__ports: "{{ service__ports | default([]) }}"
-        docker_systemd_service__env: "{{ service__env | default({}) }}"
-        docker_systemd_service__volumes: "{{ service__volumes | default([]) }}"
-        docker_systemd_service__labels: "{{ service__labels | default({}) }}"
-        docker_systemd_service__backup: "{{ service__backup | default(false) }}"
-        docker_systemd_service__cmd: "{{  service__cmd | default('') }}"
-
-    # Create A record for hosts in 'ingress' group
+      # Create A record for hosts in 'ingress' group
     - name: Create DNS records for services
       role: dns_records
       vars:
@@ -59,3 +43,19 @@
       when:
         - target_host not in groups['ingress']
         - (service__labels | traefik2dns | default([])) | length > 0
+
+    - name: Deploy docker services via systemd
+      role: docker_systemd_service
+      delegate_to: "{{ target_host }}"
+      become: true
+      vars:
+        docker_systemd_service__name: "{{ service__name }}"
+        docker_systemd_service__image: "{{ service__image }}"
+        docker_systemd_service__state: started
+        docker_systemd_service__network_mode: "{{ service__network_mode | default('bridge') }}"
+        docker_systemd_service__ports: "{{ service__ports | default([]) }}"
+        docker_systemd_service__env: "{{ service__env | default({}) }}"
+        docker_systemd_service__volumes: "{{ service__volumes | default([]) }}"
+        docker_systemd_service__labels: "{{ service__labels | default({}) }}"
+        docker_systemd_service__backup: "{{ service__backup | default(false) }}"
+        docker_systemd_service__cmd: "{{  service__cmd | default('') }}"

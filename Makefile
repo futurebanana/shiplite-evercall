@@ -1,3 +1,8 @@
+# Load from .env file
+ifneq (,$(wildcard ./.env))
+	include .env
+	export $(shell sed 's/=.*//' .env)
+endif
 # ---- Docker Config ----
 VERSION ?= $(shell git rev-parse --short HEAD)
 DOCKER_REGISTRY = docker.io/karstenjakobsen
@@ -86,3 +91,8 @@ help:
 	@echo "  push [ <project> <project2> ...]   		- Push all Docker images for all services"
 	@echo "  push-service-a [ push-service-b ...]    	- Push Docker image(s) for one or more services"
 	@echo "  help                               		- Show this help message"
+
+.PHONY: cycloid-login
+cycloid-login:
+	@echo "Logging into Cycloid..."
+	cy login
