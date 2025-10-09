@@ -1,7 +1,7 @@
 ---
 target_host: edge01
 service__name: whoami
-service__image: "docker.io/karstenjakobsen/shiplite-whoami:v0.1.0"
+service__image: "docker.io/karstenjakobsen/evercall-whoami:0.1.0"
 service__env:
   TZ: "Europe/Copenhagen"
   TEST: "Hest"
