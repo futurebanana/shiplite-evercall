@@ -2,7 +2,7 @@
 target_host: edge01
 service__replicas:
   - service__name: whoami
-    service__image: "docker.io/karstenjakobsen/shiplite-whoami:latest"
+    service__image: "docker.io/karstenjakobsen/shiplite-whoami:v0.0.1"
     service__env:
       TZ: "Europe/Copenhagen"
       TEST: "Hest"
