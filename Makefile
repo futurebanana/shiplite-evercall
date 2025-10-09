@@ -1,3 +1,8 @@
+# Load from .env file
+ifneq (,$(wildcard ./.env))
+	include .env
+	export $(shell sed 's/=.*//' .env)
+endif
 # ---- Docker Config ----
 VERSION ?= $(shell git rev-parse --short HEAD)
 DOCKER_REGISTRY = docker.io/karstenjakobsen
@@ -60,6 +65,14 @@ ansible-encrypt-dev:
 		ansible-vault encrypt --encrypt-vault-id dev $$file; \
 	done
 
+.PHONY: ansible-decrypt-dev
+ansible-decrypt-dev:
+	@echo "Decrypting secrets for development environment for all files in hosts/dev/secrets/"
+	cd ansible && \
+	for file in hosts/dev/secrets/*; do \
+		ansible-vault decrypt --vault-id dev $$file; \
+	done
+
 .PHONY: ansible-encrypt-prod
 ansible-encrypt-prod:
 	@echo "Encrypting secrets for production environment for all files in hosts/prod/secrets/"
@@ -78,3 +91,8 @@ help:
 	@echo "  push [ <project> <project2> ...]   		- Push all Docker images for all services"
 	@echo "  push-service-a [ push-service-b ...]    	- Push Docker image(s) for one or more services"
 	@echo "  help                               		- Show this help message"
+
+.PHONY: cycloid-login
+cycloid-login:
+	@echo "Logging into Cycloid..."
+	cy login

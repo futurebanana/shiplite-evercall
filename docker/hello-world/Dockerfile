@@ -55,7 +55,6 @@ COPY --chown=nobody src/ /var/www/html/
 # Expose the port nginx is reachable on
 EXPOSE 8080
 
-# Let supervisord start nginx & php-fpm
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 
 # Configure a healthcheck to validate that everything is up&running

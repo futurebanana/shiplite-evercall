@@ -20,6 +20,7 @@ docker_systemd_service__stop_actions: []
 docker_systemd_service__start_pre_actions: []
 docker_systemd_service__start_post_actions: []
 docker_systemd_service__labels: []
+docker_systemd_service__backup: false
 
 # ifnotpresent, never
 docker_systemd_service__image_pull_policy: "ifnotpresent"

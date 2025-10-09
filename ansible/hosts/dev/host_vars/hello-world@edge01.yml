@@ -1,17 +1,40 @@
 ---
 target_host: edge01
-service__replicas:
-  - service__name: hello-world
-    service__image: "docker.io/karstenjakobsen/shiplite-hello-world:v0.0.1"
-    service__env:
-      TZ: "Europe/Copenhagen"
-      SECRET: "{{ secrets.secret__hello_world }}"
-      PEST: "Ko"
-      TEST: "Test"
-    service__labels:
-      traefik.enable: true
-      traefik.http.routers.hello-world.rule: Host(`hello-world.karstenjakobsen.dk`)
-      traefik.http.routers.hello-world.entrypoints: https
-      traefik.http.routers.hello-world.tls: true
-      traefik.http.routers.hello-world.tls.certresolver: letsencrypt
-      traefik.http.routers.hello-world.service: hello-world
+service__name: hello-world
+service__image: "docker.io/karstenjakobsen/shiplite-hello-world:devel-8629a8c"
+service__env:
+  TZ: "Europe/Copenhagen"
+  SECRET: "{{ secrets.secret__hello_world }}"
+  PEST: "Ko"
+  TEST: "Test"
+service__labels:
+  traefik.enable: true
+  traefik.http.routers.hello-world.rule: Host(`hello-world.karstenjakobsen.dk`)
+  traefik.http.routers.hello-world.entrypoints: https
+  traefik.http.routers.hello-world.tls: true
+  traefik.http.routers.hello-world.tls.certresolver: letsencrypt
+  traefik.http.routers.hello-world.service: hello-world
+# per-service backup intent (read by a central kopia role)
+service__backup:
+  paths:
+    - /srv/hello-world/config
+    - /srv/hello-world/data
+  excludes:
+    - "**/*.log"
+    - "**/cache/**"
+    - "**/tmp/**"
+  tags:
+    service: hello-world
+    host: edge01
+    app: hello-world
+    env: "{{ environment_name | default('dev') }}"
+  policy:
+    compression: zstd
+    keep_daily: 7
+    keep_weekly: 4
+    keep_monthly: 6
+  # Optional hooks (run before/after snapshot; good for dumps, pruning, etc.)
+  pre_hooks:
+    - "/usr/bin/true"
+  post_hooks:
+    - "/usr/bin/find /srv/hello-world/data/tmp -type f -mtime +7 -delete"

@@ -53,4 +53,19 @@ pre-commit run --all
 
 # ansible-galaxy role install -r requirements.yml
 
+# # Install cycloid cli
+# export os="$(uname -s | tr [:upper:] [:lower:])"; \
+# if [[ "$(uname -m)" == "x86_64" ]]; then export platform=amd64 ; else export platform=arm64 ; fi; \
+#   curl -sLO $(curl -s https://api.github.com/repos/cycloidio/cycloid-cli/releases/latest | jq -r '.assets[] | select(.name=="cy") | .browser_download_url') \
+#     && chmod +x cy \
+#     && sudo mkdir -p /usr/local/bin \
+#     && sudo mv cy /usr/local/bin
+
+# source <(cy completion zsh)
+
+# export env vars from .env file
+if [ -f .env ]; then
+  export "$(grep -v '^#' .env | xargs)"
+fi
+
 echo "Welcome to the jungle..."
